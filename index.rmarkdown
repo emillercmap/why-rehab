@@ -3,7 +3,11 @@ title: "why rehab"
 toc: false
 ---
 
+
+
 # libraries
+
+
 
 ```{r}
 library(devtools)
@@ -17,9 +21,13 @@ library(scales)
 
 ```
 
+
+
 ## tidy data
 
 ### 2014
+
+
 
 ```{r}
 county2014 <- read_csv(".\\inputs\\CDS\\County_2014.csv")
@@ -44,7 +52,11 @@ county2014 <- county2014 %>%
   rename(RENT_OCC_HU = RNT_OCC_HU)
 ```
 
+
+
 ### 2015
+
+
 
 ```{r}
 county2015 <- read_csv(".\\inputs\\CDS\\County_2015.csv")
@@ -73,7 +85,11 @@ county2015 <- county2015 %>%
     )
 ```
 
+
+
 ### 2016
+
+
 
 ```{r}
 county2016 <- read_csv(".\\inputs\\CDS\\County_2016.csv")
@@ -96,7 +112,11 @@ county2016 <- county2016 %>%
     )
 ```
 
+
+
 ### 2017
+
+
 
 ```{r}
 county2017 <- read_csv(".\\inputs\\CDS\\County_2017.csv")
@@ -119,7 +139,11 @@ county2017 <- county2017 %>%
     )
 ```
 
+
+
 ### 2018
+
+
 
 ```{r}
 county2018 <- read_csv(".\\inputs\\CDS\\County_2018.csv")
@@ -142,7 +166,11 @@ county2018 <- county2018 %>%
     )
 ```
 
+
+
 ### 2019
+
+
 
 ```{r}
 county2019 <- read_csv(".\\inputs\\CDS\\County_2019.csv")
@@ -167,7 +195,11 @@ county2019 <- county2019 %>%
     )
 ```
 
+
+
 ### 2020
+
+
 
 ```{r}
 county2020 <- read_csv(".\\inputs\\CDS\\County_2020.csv")
@@ -191,7 +223,11 @@ county2020 <- county2020 %>%
     )
 ```
 
+
+
 ### 2021
+
+
 
 ```{r}
 county2021 <- read_csv(".\\inputs\\CDS\\County_2021.csv")
@@ -215,7 +251,11 @@ county2021 <- county2021 %>%
     )
 ```
 
+
+
 ### 2022
+
+
 
 ```{r}
 county2022 <- read_csv(".\\inputs\\CDS\\County_2022.csv")
@@ -239,7 +279,11 @@ county2022 <- county2022 %>%
     )
 ```
 
+
+
 ### 2023
+
+
 
 ```{r}
 county2023 <- read_csv(".\\inputs\\CDS\\County_2023.csv")
@@ -263,7 +307,11 @@ county2023 <- county2023 %>%
     )
 ```
 
+
+
 ### 2024
+
+
 
 ```{r}
 county2024 <- read_csv(".\\inputs\\CDS\\County_2024.csv")
@@ -288,7 +336,11 @@ county2024 <- county2024 %>%
     )
 ```
 
+
+
 ## standardize variables
+
+
 
 ```{r}
 county2014 <- county2014 %>%
@@ -361,7 +413,11 @@ county2024 <- county2024 %>%
                         HU_10_19UN + HU_GT_19UN)) 
 ```
 
+
+
 ## Binding rows
+
+
 
 ```{r}
 county <- bind_rows(county2014,
@@ -384,7 +440,11 @@ county <- county %>%
   
 ```
 
+
+
 ## adjust for inflation
+
+
 
 ```{r}
 inflation <- read_csv(".\\inputs\\inflation.csv")
@@ -397,7 +457,11 @@ county <- county %>%
   mutate(medhv_adjust = infl2024 * MED_HV)
 ```
 
+
+
 ## units to households
+
+
 
 ```{r}
 county <- county %>%
@@ -408,9 +472,13 @@ county <- county %>%
 write_csv(county, ".\\county.csv")
 ```
 
+
+
 # Plots
 
 ## Total housing units
+
+
 ```{r}
 total_units_plot <- county %>%
   filter(GEOG != "Region") %>%
@@ -432,7 +500,11 @@ total_units_plot <- county %>%
   cmap_color_discrete(palette = "main")
 ```
 
+
+
 #### Total housing units plotly export
+
+
 ```{r}
 total_units_plotly <- 
 ggplotly(total_units_plot, tooltip = "text") %>%
@@ -478,6 +550,4 @@ total_units_plotly
 
 htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
 ```
-
-
 

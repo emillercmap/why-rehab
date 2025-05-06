@@ -414,13 +414,16 @@ write_csv(county, ".\\county.csv")
 ```{r}
 total_units_plot <- county %>%
   filter(GEOG != "Region") %>%
-  ggplot(aes(x = year, 
-             y = HU_TOT, 
-             color = GEOG,
-             group = GEOG,
-             text = paste("County:", GEOG,
-                          "<br>Year", year,
-                          "<br>Total housing units", comma(HU_TOT)))) +
+  rename(County = GEOG,
+         `Total housing units` = HU_TOT,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Total housing units`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Total housing units:", scales::comma(`Total housing units`)))) +
   geom_line(linewidth = 1) +
   geom_point() +
   scale_y_continuous(labels = scales::comma_format()) +
@@ -432,14 +435,42 @@ total_units_plot <- county %>%
 #### Total housing units plotly export
 ```{r}
 total_units_plotly <- 
-  ggplotly(total_units_plot) %>%
-   layout(
+ggplotly(total_units_plot, tooltip = "text") %>%
+  layout(
     font = list(family = "Whitney", size = 12),
-    title = list(font = list(family = "Whitney", size = 16)),
-    xaxis = list(title = list(font = list(family = "Whitney", size = 14))),
-    yaxis = list(title = list(font = list(family = "Whitney", size = 14))),
-    legend = list(font = list(family = "Whitney", size = 12))
+    title = list(
+      text = "Total housing units by county, 2014-2024",
+      font = list(family = "Whitney", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    )
   )
+
   
 total_units_plotly
 

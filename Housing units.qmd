@@ -1,0 +1,41 @@
+---
+title: "Housing units"
+toc: false
+execute: 
+  echo: false
+---
+```{r}
+library(devtools)
+library(tidyverse, tidycensus)
+library(ggplot2)
+library(plotly)
+library(pak)
+library(cmapplot)
+
+county <- read_csv(".\\county.csv")
+```
+
+## Total housing units
+```{r}
+total_units_plot <- county %>%
+  filter(GEOG != "Region") %>%
+  ggplot(aes(x = year, 
+             y = HU_TOT, 
+             color = GEOG))+
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Total housing units") +
+  cmap_color_discrete(palette = "main")
+
+
+```
+
+## plotly
+```{r}
+total_units_plotly <- 
+  ggplotly(total_units_plot)
+htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
+```
+

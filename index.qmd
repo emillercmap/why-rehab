@@ -479,5 +479,89 @@ total_units_plotly
 htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
 ```
 
+## Vacancy rate
+```{r}
+vacancy_rate_plot <- 
+  
+  county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Vacancy rate` = vac_rate,
+         Year = year) %>%
+  mutate(`Vacancy rate` = round(`Vacancy rate`, 1))%>%
+  ggplot(aes(x = Year, 
+             y = `Vacancy rate`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Vacancy rate:", `Vacancy rate`))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  geom_hline(yintercept = 8, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 8
+  geom_hline(yintercept = 2, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 2
+  annotate("text", x = 2020, y = 8.25, 
+           label = "Healthy rental vacancy rate",
+           color = "#3C3C3C", 
+           size = 5, 
+           hjust = 0.5,
+           family = "Whitney")+
+  annotate("text", x = 2020, y = 2.25, 
+           label = "Healthy homeowner vacancy rate", 
+           color = "#3C3C3C", 
+           size = 5, 
+           hjust = 0.5,
+           family = "Whitney")+
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Vacancy rate") +
+  cmap_color_discrete(palette = "main")
+```
+
+### vacancy rate plotly
+```{r}
+vacancy_rate_plotly <- 
+ggplotly(vacancy_rate_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Vacancy rate (percent) by county, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\vacancy_rate.html", selfcontained = T)
+```
 
 

@@ -12,6 +12,9 @@ library(ggplot2)
 library(plotly)
 library(pak)
 library(cmapplot)
+library(scales)
+
+
 ```
 
 ## tidy data
@@ -400,3 +403,37 @@ county <- county %>%
 county <- county %>%
   mutate(stock_hh = HU_TOT / TOT_HH)
 ```
+
+```{r}
+write_csv(county, ".\\county.csv")
+```
+
+# Plots
+
+## Total housing units
+```{r}
+total_units_plot <- county %>%
+  filter(GEOG != "Region") %>%
+  ggplot(aes(x = year, 
+             y = HU_TOT, 
+             color = GEOG,
+             text = paste("County:", GEOG,
+                          "<br>Year", year,
+                          "<br>Total housing units", comma(HU_TOT))))+
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Total housing units") +
+  cmap_color_discrete(palette = "main")
+```
+
+#### Total housing units plotly export
+```{r}
+total_units_plotly <- 
+  ggplotly(total_units_plot)
+total_units_plotly
+htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
+```
+
+## 

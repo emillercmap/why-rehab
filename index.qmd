@@ -561,7 +561,74 @@ ggplotly(vacancy_rate_plot, tooltip = "text") %>%
   
 
 
-htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\vacancy_rate.html", selfcontained = T)
+htmlwidgets::saveWidget(as_widget(vacancy_rate_plotly), ".\\docs\\vacancy_rate.html", selfcontained = T)
 ```
 
+## Median household income
+```{r}
+median_hhi_plot <- 
+  county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Median household income` = medincome_adjust,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Median household income`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Median household income (inflation-adjusted to 2024):", scales::comma(`Median household income`)))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Median household income") +
+  cmap_color_discrete(palette = "main")
+```
+### median household income plotly
+```{r}
+median_hhi_plotly <- 
+ggplotly(median_hhi_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Median household income<br>in 2024 inflation-adjusted dollars, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(median_hhi_plotly), ".\\docs\\median_hhi.html", selfcontained = T)
+```
 

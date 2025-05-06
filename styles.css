@@ -1,1 +1,18 @@
+/* Define the Whitney font */
+@font-face {
+  font-family: 'Whitney';
+  src: url('www/whitney.otf') format('opentype'); /* Adjust path if needed */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Apply the font to the body (and other elements as needed) */
+body {
+  font-family: 'Whitney', sans-serif;
+}
+
+/* Optionally, you can define more styles for other elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Whitney', sans-serif;
+}
 /* css styles */

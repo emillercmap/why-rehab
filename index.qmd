@@ -417,9 +417,10 @@ total_units_plot <- county %>%
   ggplot(aes(x = year, 
              y = HU_TOT, 
              color = GEOG,
+             group = GEOG,
              text = paste("County:", GEOG,
                           "<br>Year", year,
-                          "<br>Total housing units", comma(HU_TOT))))+
+                          "<br>Total housing units", comma(HU_TOT)))) +
   geom_line(linewidth = 1) +
   geom_point() +
   scale_y_continuous(labels = scales::comma_format()) +
@@ -431,9 +432,20 @@ total_units_plot <- county %>%
 #### Total housing units plotly export
 ```{r}
 total_units_plotly <- 
-  ggplotly(total_units_plot)
+  ggplotly(total_units_plot) %>%
+   layout(
+    font = list(family = "Whitney", size = 12),
+    title = list(font = list(family = "Whitney", size = 16)),
+    xaxis = list(title = list(font = list(family = "Whitney", size = 14))),
+    yaxis = list(title = list(font = list(family = "Whitney", size = 14))),
+    legend = list(font = list(family = "Whitney", size = 12))
+  )
+  
 total_units_plotly
+
+
 htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
 ```
 
-## 
+
+

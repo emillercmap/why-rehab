@@ -99,6 +99,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
 
 
 <link rel="stylesheet" href="styles.css">
@@ -182,13 +200,26 @@ The following object is masked from 'package:graphics':
 cmapplot requires RStudio to use Whitney fonts in the R plots window.
     Please install RStudio. &lt;https://www.rstudio.com&gt;</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'scales'
+
+The following object is masked from 'package:purrr':
+
+    discard
+
+The following object is masked from 'package:readr':
+
+    col_factor</code></pre>
+</div>
 </div>
 <section id="tidy-data" class="level2">
 <h2 class="anchored" data-anchor-id="tidy-data">tidy data</h2>
 <section id="section" class="level3">
 <h3 class="anchored" data-anchor-id="section">2014</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>county2014 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2014.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>county2014 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2014.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 7 Columns: 151
 ── Column specification ────────────────────────────────────────────────────────
@@ -199,30 +230,30 @@ dbl (124): INC_LT_25K, INC_25_50K, INC_50_75K, INC_75_100K, INC_100_150K, IN...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>county2014 <span class="ot">&lt;-</span> county2014 <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2014</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">GEOG =</span> MUNI) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>         RNT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RENT_OCC_HU =</span> RNT_OCC_HU)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>county2014 <span class="ot">&lt;-</span> county2014 <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2014</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">GEOG =</span> MUNI) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>         RNT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RENT_OCC_HU =</span> RNT_OCC_HU)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-1" class="level3">
 <h3 class="anchored" data-anchor-id="section-1">2015</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>county2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2015.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>county2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2015.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 239
 ── Column specification ────────────────────────────────────────────────────────
@@ -233,34 +264,34 @@ dbl (177): F2010_POP, F2000_POP, POP_CHANGE, TOT_EMP_RES, TOT_EMP_WORK, AVG_...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>county2015 <span class="ot">&lt;-</span> county2015 <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2015</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">GEOG =</span> CNTY) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>         HU_SNG_DET,</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>         HU_SNG_ATT,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>         HU_2UN,</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>         HU_3_4UN,</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>         HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>county2015 <span class="ot">&lt;-</span> county2015 <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2015</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">GEOG =</span> CNTY) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>         HU_SNG_DET,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>         HU_SNG_ATT,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>         HU_2UN,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>         HU_3_4UN,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>         HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-2" class="level3">
 <h3 class="anchored" data-anchor-id="section-2">2016</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>county2016 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2016.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>county2016 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2016.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 156
 ── Column specification ────────────────────────────────────────────────────────
@@ -271,28 +302,28 @@ dbl (133): F2000_POP, F2010_POP, POP_CHANGE, TOT_POP, UND19, A20_34, A35_49,...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>county2016 <span class="ot">&lt;-</span> county2016 <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2016</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>county2016 <span class="ot">&lt;-</span> county2016 <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2016</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-3" class="level3">
 <h3 class="anchored" data-anchor-id="section-3">2017</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>county2017 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2017.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>county2017 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2017.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 156
 ── Column specification ────────────────────────────────────────────────────────
@@ -303,28 +334,28 @@ dbl (98): F2000_POP, F2010_POP, POP_CHANGE, TOT_POP, UND19, A20_34, A35_49, ...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>county2017 <span class="ot">&lt;-</span> county2017 <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2017</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>county2017 <span class="ot">&lt;-</span> county2017 <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2017</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-4" class="level3">
 <h3 class="anchored" data-anchor-id="section-4">2018</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>county2018 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2018.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>county2018 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2018.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 227
 ── Column specification ────────────────────────────────────────────────────────
@@ -336,28 +367,28 @@ lgl  (18): F2000_UND19, F2000_A20_34, F2000_A35_49, F2000_A50_64, F2000_OV65...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>county2018 <span class="ot">&lt;-</span> county2018 <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2018</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>county2018 <span class="ot">&lt;-</span> county2018 <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2018</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-5" class="level3">
 <h3 class="anchored" data-anchor-id="section-5">2019</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>county2019 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2019.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>county2019 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2019.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 214
 ── Column specification ────────────────────────────────────────────────────────
@@ -368,30 +399,30 @@ dbl (164): F2000_POP, F2010_POP, TOT_POP, UND19, A20_34, A35_49, A50_64, A65...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>county2019 <span class="ot">&lt;-</span> county2019 <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2019</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">GEOG =</span> Field1) <span class="sc">%&gt;%</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>county2019 <span class="ot">&lt;-</span> county2019 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2019</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">GEOG =</span> Field1) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-6" class="level3">
 <h3 class="anchored" data-anchor-id="section-6">2020</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>county2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2020.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>county2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2020.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 222
 ── Column specification ────────────────────────────────────────────────────────
@@ -403,29 +434,29 @@ lgl  (18): F2000_UND19, F2000_A20_34, F2000_A35_49, F2000_A50_64, F2000_OV65...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>county2020 <span class="ot">&lt;-</span> county2020 <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2020</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>county2020 <span class="ot">&lt;-</span> county2020 <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2020</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_5UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-7" class="level3">
 <h3 class="anchored" data-anchor-id="section-7">2021</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>county2021 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2021.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>county2021 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2021.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 282
 ── Column specification ────────────────────────────────────────────────────────
@@ -437,29 +468,29 @@ lgl  (18): F2000_UND19, F2000_A20_34, F2000_A35_49, F2000_A50_64, F2000_OV65...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>county2021 <span class="ot">&lt;-</span> county2021 <span class="sc">%&gt;%</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2021</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>county2021 <span class="ot">&lt;-</span> county2021 <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2021</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-8" class="level3">
 <h3 class="anchored" data-anchor-id="section-8">2022</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>county2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2022.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>county2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2022.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 259
 ── Column specification ────────────────────────────────────────────────────────
@@ -471,29 +502,29 @@ lgl  (18): F2000_UND19, F2000_A20_34, F2000_A35_49, F2000_A50_64, F2000_OV65...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>county2022 <span class="ot">&lt;-</span> county2022 <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>county2022 <span class="ot">&lt;-</span> county2022 <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-9" class="level3">
 <h3 class="anchored" data-anchor-id="section-9">2023</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>county2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2023.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>county2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2023.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 259
 ── Column specification ────────────────────────────────────────────────────────
@@ -505,29 +536,29 @@ lgl  (18): F2000_UND19, F2000_A20_34, F2000_A35_49, F2000_A50_64, F2000_OV65...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>county2023 <span class="ot">&lt;-</span> county2023 <span class="sc">%&gt;%</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2023</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>county2023 <span class="ot">&lt;-</span> county2023 <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2023</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="section-10" class="level3">
 <h3 class="anchored" data-anchor-id="section-10">2024</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>county2024 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2024.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>county2024 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">CDS</span><span class="sc">\\</span><span class="st">County_2024.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 8 Columns: 429
 ── Column specification ────────────────────────────────────────────────────────
@@ -539,113 +570,113 @@ lgl (164): HA_AFT2000, HA_70_00, TRANSIT_LOW_PCT, TRANSIT_MOD_PCT, TRANSIT_H...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>county2024 <span class="ot">&lt;-</span> county2024 <span class="sc">%&gt;%</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2024</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(HA_AFT2000<span class="sc">:</span>PRIV_EMP)) <span class="sc">%&gt;%</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>county2024 <span class="ot">&lt;-</span> county2024 <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_column</span>(<span class="at">year =</span> <span class="dv">2024</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(HA_AFT2000<span class="sc">:</span>PRIV_EMP)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOG,  <span class="co"># GEO</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>         MEDINC,   <span class="co"># MEDIAN INCOME</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>         HU_TOT<span class="sc">:</span>HU_GT_19UN,  <span class="co"># HOUSING UNITS AND TYPE</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>         TOT_POP,  <span class="co"># POPULATION</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>         MED_HV,   <span class="co"># MEDIAN HOME VALUE</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>         TOT_HH,   <span class="co"># TOTAL HOUSEHOLDS</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>         OWN_OCC_HU,  <span class="co"># OWNER OCCUPIED</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>         RENT_OCC_HU,  <span class="co"># RENTER OCCUPIED</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>         VAC_HU,  <span class="co"># VACANT UNITS</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>         MED_AGE,   <span class="co"># MEDIAN AGE</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>         H_Cost_Typical, <span class="co"># % income spent on housing for typical family</span></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>         year)<span class="sc">%&gt;%</span>  <span class="co"># year</span></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(year,</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">.after =</span> GEOG</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="standardize-variables" class="level2">
 <h2 class="anchored" data-anchor-id="standardize-variables">standardize variables</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>county2014 <span class="ot">&lt;-</span> county2014 <span class="sc">%&gt;%</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>county2015 <span class="ot">&lt;-</span> county2015 <span class="sc">%&gt;%</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>county2016 <span class="ot">&lt;-</span> county2016 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>county2014 <span class="ot">&lt;-</span> county2014 <span class="sc">%&gt;%</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>county2017 <span class="ot">&lt;-</span> county2017 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>county2015 <span class="ot">&lt;-</span> county2015 <span class="sc">%&gt;%</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>county2018 <span class="ot">&lt;-</span> county2018 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>county2016 <span class="ot">&lt;-</span> county2016 <span class="sc">%&gt;%</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>county2019 <span class="ot">&lt;-</span> county2019 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>county2017 <span class="ot">&lt;-</span> county2017 <span class="sc">%&gt;%</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>county2020 <span class="ot">&lt;-</span> county2020 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>county2018 <span class="ot">&lt;-</span> county2018 <span class="sc">%&gt;%</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>county2021 <span class="ot">&lt;-</span> county2021 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>county2019 <span class="ot">&lt;-</span> county2019 <span class="sc">%&gt;%</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_5_9UN <span class="sc">+</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>county2022 <span class="ot">&lt;-</span> county2022 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>county2020 <span class="ot">&lt;-</span> county2020 <span class="sc">%&gt;%</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_5_9UN <span class="sc">+</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_GT_5UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>county2023 <span class="ot">&lt;-</span> county2023 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>county2021 <span class="ot">&lt;-</span> county2021 <span class="sc">%&gt;%</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_5_9UN <span class="sc">+</span></span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>county2024 <span class="ot">&lt;-</span> county2024 <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>county2022 <span class="ot">&lt;-</span> county2022 <span class="sc">%&gt;%</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_5_9UN <span class="sc">+</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>county2023 <span class="ot">&lt;-</span> county2023 <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_5_9UN <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>county2024 <span class="ot">&lt;-</span> county2024 <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">single_fam =</span> (HU_SNG_DET <span class="sc">+</span> HU_SNG_ATT),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">multi_fam =</span> (HU_2UN <span class="sc">+</span> HU_3_4UN <span class="sc">+</span> HU_5_9UN <span class="sc">+</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                        HU_10_19UN <span class="sc">+</span> HU_GT_19UN)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="binding-rows" class="level2">
 <h2 class="anchored" data-anchor-id="binding-rows">Binding rows</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(county2014,</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>          county2015,</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>          county2016,</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>          county2017,</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>          county2018,</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>          county2019,</span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>          county2020,</span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>          county2021,</span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>          county2022,</span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>          county2023,</span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>          county2024)</span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GEOG =</span> <span class="fu">str_replace</span>(GEOG, <span class="st">"CMAP Region"</span>, <span class="st">"Region"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vac_rate =</span> ((VAC_HU<span class="sc">/</span>HU_TOT)<span class="sc">*</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(county2014,</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>          county2015,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>          county2016,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>          county2017,</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>          county2018,</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>          county2019,</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>          county2020,</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>          county2021,</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>          county2022,</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>          county2023,</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>          county2024)</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GEOG =</span> <span class="fu">str_replace</span>(GEOG, <span class="st">"CMAP Region"</span>, <span class="st">"Region"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vac_rate =</span> ((VAC_HU<span class="sc">/</span>HU_TOT)<span class="sc">*</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="adjust-for-inflation" class="level2">
 <h2 class="anchored" data-anchor-id="adjust-for-inflation">adjust for inflation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>inflation <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">inflation.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>inflation <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">".</span><span class="sc">\\</span><span class="st">inputs</span><span class="sc">\\</span><span class="st">inflation.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>New names:
 Rows: 15 Columns: 5
@@ -656,22 +687,101 @@ Rows: 15 Columns: 5
 Specify the column types or set `show_col_types = FALSE` to quiet this message.
 • `` -&gt; `...1`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(inflation, <span class="fu">join_by</span>(year <span class="sc">==</span> year)) <span class="sc">%&gt;%</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">inflationfac =</span> value) <span class="sc">%&gt;%</span></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">infl2024 =</span> <span class="fl">313.689</span><span class="sc">/</span>inflationfac) <span class="sc">%&gt;%</span> <span class="co">#313.689 is the 2024 inflation factor </span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">medincome_adjust =</span> infl2024 <span class="sc">*</span>MEDINC) <span class="sc">%&gt;%</span></span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">medhv_adjust =</span> infl2024 <span class="sc">*</span> MED_HV)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(inflation, <span class="fu">join_by</span>(year <span class="sc">==</span> year)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">inflationfac =</span> value) <span class="sc">%&gt;%</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">infl2024 =</span> <span class="fl">313.689</span><span class="sc">/</span>inflationfac) <span class="sc">%&gt;%</span> <span class="co">#313.689 is the 2024 inflation factor </span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">medincome_adjust =</span> infl2024 <span class="sc">*</span>MEDINC) <span class="sc">%&gt;%</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">medhv_adjust =</span> infl2024 <span class="sc">*</span> MED_HV)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="units-to-households" class="level2">
 <h2 class="anchored" data-anchor-id="units-to-households">units to households</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stock_hh =</span> HU_TOT <span class="sc">/</span> TOT_HH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stock_hh =</span> HU_TOT <span class="sc">/</span> TOT_HH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(county, <span class="st">".</span><span class="sc">\\</span><span class="st">county.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="plots" class="level1">
+<h1>Plots</h1>
+<section id="total-housing-units" class="level2">
+<h2 class="anchored" data-anchor-id="total-housing-units">Total housing units</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>total_units_plot <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(GEOG <span class="sc">!=</span> <span class="st">"Region"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, </span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> HU_TOT, </span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> GEOG,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">group =</span> GEOG,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">text =</span> <span class="fu">paste</span>(<span class="st">"County:"</span>, GEOG,</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"&lt;br&gt;Year"</span>, year,</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"&lt;br&gt;Total housing units"</span>, <span class="fu">comma</span>(HU_TOT)))) <span class="sc">+</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>()) <span class="sc">+</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cmap</span>(<span class="at">xlab =</span> <span class="st">"Year"</span>,</span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">ylab =</span> <span class="st">"Total housing units"</span>) <span class="sc">+</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cmap_color_discrete</span>(<span class="at">palette =</span> <span class="st">"main"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="total-housing-units-plotly-export" class="level4">
+<h4 class="anchored" data-anchor-id="total-housing-units-plotly-export">Total housing units plotly export</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>total_units_plotly <span class="ot">&lt;-</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplotly</span>(total_units_plot) <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">layout</span>(</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Whitney"</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(<span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Whitney"</span>, <span class="at">size =</span> <span class="dv">16</span>)),</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Whitney"</span>, <span class="at">size =</span> <span class="dv">14</span>))),</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="fu">list</span>(<span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Whitney"</span>, <span class="at">size =</span> <span class="dv">14</span>))),</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> <span class="fu">list</span>(<span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Whitney"</span>, <span class="at">size =</span> <span class="dv">12</span>))</span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>total_units_plotly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-22c2db4c71fe78011004" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-22c2db4c71fe78011004">{"x":{"data":[{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[2178739,2176266,2177033,2176549,2177342,2183987,2188394,2193338,2198489,2253936,2261319],"text":["year: 2014<br />HU_TOT: 2178739<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2014 <br>Total housing units 2,178,739","year: 2015<br />HU_TOT: 2176266<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2015 <br>Total housing units 2,176,266","year: 2016<br />HU_TOT: 2177033<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2016 <br>Total housing units 2,177,033","year: 2017<br />HU_TOT: 2176549<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2017 <br>Total housing units 2,176,549","year: 2018<br />HU_TOT: 2177342<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2018 <br>Total housing units 2,177,342","year: 2019<br />HU_TOT: 2183987<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2019 <br>Total housing units 2,183,987","year: 2020<br />HU_TOT: 2188394<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2020 <br>Total housing units 2,188,394","year: 2021<br />HU_TOT: 2193338<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2021 <br>Total housing units 2,193,338","year: 2022<br />HU_TOT: 2198489<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2022 <br>Total housing units 2,198,489","year: 2023<br />HU_TOT: 2253936<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2023 <br>Total housing units 2,253,936","year: 2024<br />HU_TOT: 2261319<br />GEOG: Cook County<br />GEOG: Cook County<br />County: Cook County <br>Year 2024 <br>Total housing units 2,261,319"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(30,71,142,1)","dash":"solid"},"hoveron":"points","name":"Cook County","legendgroup":"Cook County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(30,71,142,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(30,71,142,1)"}},"frame":null},{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[356370,356217,356625,357016,357549,358421,359299,360307,361221,364157,365347],"text":["year: 2014<br />HU_TOT:  356370<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2014 <br>Total housing units 356,370","year: 2015<br />HU_TOT:  356217<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2015 <br>Total housing units 356,217","year: 2016<br />HU_TOT:  356625<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2016 <br>Total housing units 356,625","year: 2017<br />HU_TOT:  357016<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2017 <br>Total housing units 357,016","year: 2018<br />HU_TOT:  357549<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2018 <br>Total housing units 357,549","year: 2019<br />HU_TOT:  358421<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2019 <br>Total housing units 358,421","year: 2020<br />HU_TOT:  359299<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2020 <br>Total housing units 359,299","year: 2021<br />HU_TOT:  360307<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2021 <br>Total housing units 360,307","year: 2022<br />HU_TOT:  361221<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2022 <br>Total housing units 361,221","year: 2023<br />HU_TOT:  364157<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2023 <br>Total housing units 364,157","year: 2024<br />HU_TOT:  365347<br />GEOG: DuPage County<br />GEOG: DuPage County<br />County: DuPage County <br>Year 2024 <br>Total housing units 365,347"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(109,174,79,1)","dash":"solid"},"hoveron":"points","name":"DuPage County","legendgroup":"DuPage County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(109,174,79,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(109,174,79,1)"}},"frame":null},{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[181587,182145,182852,183384,184075,185566,186759,187967,189301,187852,188854],"text":["year: 2014<br />HU_TOT:  181587<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2014 <br>Total housing units 181,587","year: 2015<br />HU_TOT:  182145<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2015 <br>Total housing units 182,145","year: 2016<br />HU_TOT:  182852<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2016 <br>Total housing units 182,852","year: 2017<br />HU_TOT:  183384<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2017 <br>Total housing units 183,384","year: 2018<br />HU_TOT:  184075<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2018 <br>Total housing units 184,075","year: 2019<br />HU_TOT:  185566<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2019 <br>Total housing units 185,566","year: 2020<br />HU_TOT:  186759<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2020 <br>Total housing units 186,759","year: 2021<br />HU_TOT:  187967<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2021 <br>Total housing units 187,967","year: 2022<br />HU_TOT:  189301<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2022 <br>Total housing units 189,301","year: 2023<br />HU_TOT:  187852<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2023 <br>Total housing units 187,852","year: 2024<br />HU_TOT:  188854<br />GEOG: Kane County<br />GEOG: Kane County<br />County: Kane County <br>Year 2024 <br>Total housing units 188,854"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(211,180,43,1)","dash":"solid"},"hoveron":"points","name":"Kane County","legendgroup":"Kane County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(211,180,43,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(211,180,43,1)"}},"frame":null},{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[40002,40415,40747,40930,41088,41463,41683,42029,42378,44443,45078],"text":["year: 2014<br />HU_TOT:   40002<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2014 <br>Total housing units 40,002","year: 2015<br />HU_TOT:   40415<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2015 <br>Total housing units 40,415","year: 2016<br />HU_TOT:   40747<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2016 <br>Total housing units 40,747","year: 2017<br />HU_TOT:   40930<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2017 <br>Total housing units 40,930","year: 2018<br />HU_TOT:   41088<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2018 <br>Total housing units 41,088","year: 2019<br />HU_TOT:   41463<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2019 <br>Total housing units 41,463","year: 2020<br />HU_TOT:   41683<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2020 <br>Total housing units 41,683","year: 2021<br />HU_TOT:   42029<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2021 <br>Total housing units 42,029","year: 2022<br />HU_TOT:   42378<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2022 <br>Total housing units 42,378","year: 2023<br />HU_TOT:   44443<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2023 <br>Total housing units 44,443","year: 2024<br />HU_TOT:   45078<br />GEOG: Kendall County<br />GEOG: Kendall County<br />County: Kendall County <br>Year 2024 <br>Total housing units 45,078"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(0,143,213,1)","dash":"solid"},"hoveron":"points","name":"Kendall County","legendgroup":"Kendall County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(0,143,213,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,143,213,1)"}},"frame":null},{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[260020,260338,260834,261229,261715,262553,263360,264078,264681,268508,269416],"text":["year: 2014<br />HU_TOT:  260020<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2014 <br>Total housing units 260,020","year: 2015<br />HU_TOT:  260338<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2015 <br>Total housing units 260,338","year: 2016<br />HU_TOT:  260834<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2016 <br>Total housing units 260,834","year: 2017<br />HU_TOT:  261229<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2017 <br>Total housing units 261,229","year: 2018<br />HU_TOT:  261715<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2018 <br>Total housing units 261,715","year: 2019<br />HU_TOT:  262553<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2019 <br>Total housing units 262,553","year: 2020<br />HU_TOT:  263360<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2020 <br>Total housing units 263,360","year: 2021<br />HU_TOT:  264078<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2021 <br>Total housing units 264,078","year: 2022<br />HU_TOT:  264681<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2022 <br>Total housing units 264,681","year: 2023<br />HU_TOT:  268508<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2023 <br>Total housing units 268,508","year: 2024<br />HU_TOT:  269416<br />GEOG: Lake County<br />GEOG: Lake County<br />County: Lake County <br>Year 2024 <br>Total housing units 269,416"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(202,52,40,1)","dash":"solid"},"hoveron":"points","name":"Lake County","legendgroup":"Lake County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(202,52,40,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(202,52,40,1)"}},"frame":null},{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[116015,116254,116534,116772,117242,117813,118132,118464,118900,119465,119985],"text":["year: 2014<br />HU_TOT:  116015<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2014 <br>Total housing units 116,015","year: 2015<br />HU_TOT:  116254<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2015 <br>Total housing units 116,254","year: 2016<br />HU_TOT:  116534<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2016 <br>Total housing units 116,534","year: 2017<br />HU_TOT:  116772<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2017 <br>Total housing units 116,772","year: 2018<br />HU_TOT:  117242<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2018 <br>Total housing units 117,242","year: 2019<br />HU_TOT:  117813<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2019 <br>Total housing units 117,813","year: 2020<br />HU_TOT:  118132<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2020 <br>Total housing units 118,132","year: 2021<br />HU_TOT:  118464<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2021 <br>Total housing units 118,464","year: 2022<br />HU_TOT:  118900<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2022 <br>Total housing units 118,900","year: 2023<br />HU_TOT:  119465<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2023 <br>Total housing units 119,465","year: 2024<br />HU_TOT:  119985<br />GEOG: McHenry County<br />GEOG: McHenry County<br />County: McHenry County <br>Year 2024 <br>Total housing units 119,985"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(173,224,238,1)","dash":"solid"},"hoveron":"points","name":"McHenry County","legendgroup":"McHenry County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(173,224,238,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(173,224,238,1)"}},"frame":null},{"x":[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[237175,237806,238521,239232,239953,241498,242568,243907,245246,249401,251029],"text":["year: 2014<br />HU_TOT:  237175<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2014 <br>Total housing units 237,175","year: 2015<br />HU_TOT:  237806<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2015 <br>Total housing units 237,806","year: 2016<br />HU_TOT:  238521<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2016 <br>Total housing units 238,521","year: 2017<br />HU_TOT:  239232<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2017 <br>Total housing units 239,232","year: 2018<br />HU_TOT:  239953<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2018 <br>Total housing units 239,953","year: 2019<br />HU_TOT:  241498<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2019 <br>Total housing units 241,498","year: 2020<br />HU_TOT:  242568<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2020 <br>Total housing units 242,568","year: 2021<br />HU_TOT:  243907<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2021 <br>Total housing units 243,907","year: 2022<br />HU_TOT:  245246<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2022 <br>Total housing units 245,246","year: 2023<br />HU_TOT:  249401<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2023 <br>Total housing units 249,401","year: 2024<br />HU_TOT:  251029<br />GEOG: Will County<br />GEOG: Will County<br />County: Will County <br>Year 2024 <br>Total housing units 251,029"],"type":"scatter","mode":"lines+markers","line":{"width":3.7795275590551185,"color":"rgba(62,103,48,1)","dash":"solid"},"hoveron":"points","name":"Will County","legendgroup":"Will County","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(62,103,48,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(62,103,48,1)"}},"frame":null}],"layout":{"margin":{"t":21.600000000000001,"r":13.333333333333336,"b":42.79385637193856,"l":106.28310502283104},"font":{"color":"rgba(34,34,34,1)","family":"Whitney","size":12},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[2013.5,2024.5],"tickmode":"array","ticktext":["2016","2019","2022"],"tickvals":[2016,2019,2022],"categoryorder":"array","categoryarray":["2016","2019","2022"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":0,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(34,34,34,1)","family":"Whitney Book","size":18.596928185969279},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Year","font":{"color":"rgba(34,34,34,1)","family":"Whitney","size":14}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-71063.850000000006,2372384.8500000001],"tickmode":"array","ticktext":["0","500,000","1,000,000","1,500,000","2,000,000"],"tickvals":[0,500000,1000000.0000000001,1500000,2000000],"categoryorder":"array","categoryarray":["0","500,000","1,000,000","1,500,000","2,000,000"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":0,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(34,34,34,1)","family":"Whitney Book","size":18.596928185969279},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(34,34,34,1)","gridwidth":0.18674493503473871,"zeroline":false,"anchor":"x","title":{"text":"Total housing units","font":{"color":"rgba(34,34,34,1)","family":"Whitney","size":14}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(34,34,34,1)","family":"Whitney","size":12},"title":{"text":"GEOG","font":{"color":null,"family":null,"size":0}}},"hovermode":"closest","barmode":"relative","title":{"font":{"family":"Whitney","size":16}}},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"62f422b4aa9":{"x":{},"y":{},"colour":{},"text":{},"type":"scatter"},"62f41462661b":{"x":{},"y":{},"colour":{},"text":{}}},"cur_data":"62f422b4aa9","visdat":{"62f422b4aa9":["function (y) ","x"],"62f41462661b":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>htmlwidgets<span class="sc">::</span><span class="fu">saveWidget</span>(<span class="fu">as_widget</span>(total_units_plotly), <span class="st">".</span><span class="sc">\\</span><span class="st">docs</span><span class="sc">\\</span><span class="st">total_units.html"</span>, <span class="at">selfcontained =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\htmltools-fill-0.5.8.1'
+already exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\htmlwidgets-1.6.4'
+already exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\plotly-binding-4.10.4'
+already exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\typedarray-0.1' already
+exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\jquery-3.5.1' already
+exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\crosstalk-1.2.1' already
+exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir):
+'total_units_files\plotly-htmlwidgets-css-2.11.1' already exists</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create(target_dir): 'total_units_files\plotly-main-2.11.1'
+already exists</code></pre>
+</div>
 </div>
 
 
+</section>
 </section>
 </section>
 

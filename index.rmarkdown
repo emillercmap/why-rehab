@@ -1,0 +1,2176 @@
+---
+title: "why rehab"
+toc: false
+---
+
+
+
+# libraries
+
+
+
+```{r}
+library(devtools)
+library(tidyverse, tidycensus)
+library(ggplot2)
+library(plotly)
+library(pak)
+library(cmapplot)
+library(scales)
+
+
+```
+
+
+
+## tidy data
+
+### 2014
+
+
+
+```{r}
+county2014 <- read_csv(".\\inputs\\CDS\\County_2014.csv")
+
+county2014 <- county2014 %>%
+  add_column(year = 2014) %>%
+  rename(GEOG = MUNI) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RNT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    ) %>%
+  rename(RENT_OCC_HU = RNT_OCC_HU)
+```
+
+
+
+### 2015
+
+
+
+```{r}
+county2015 <- read_csv(".\\inputs\\CDS\\County_2015.csv")
+
+county2015 <- county2015 %>%
+  add_column(year = 2015) %>%
+  rename(GEOG = CNTY) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2UN,
+         HU_3_4UN,
+         HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2016
+
+
+
+```{r}
+county2016 <- read_csv(".\\inputs\\CDS\\County_2016.csv")
+
+county2016 <- county2016 %>%
+  add_column(year = 2016) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2017
+
+
+
+```{r}
+county2017 <- read_csv(".\\inputs\\CDS\\County_2017.csv")
+
+county2017 <- county2017 %>%
+  add_column(year = 2017) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2018
+
+
+
+```{r}
+county2018 <- read_csv(".\\inputs\\CDS\\County_2018.csv")
+
+county2018 <- county2018 %>%
+  add_column(year = 2018) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2019
+
+
+
+```{r}
+county2019 <- read_csv(".\\inputs\\CDS\\County_2019.csv")
+
+county2019 <- county2019 %>%
+  add_column(year = 2019) %>%
+  rename(GEOG = Field1) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2020
+
+
+
+```{r}
+county2020 <- read_csv(".\\inputs\\CDS\\County_2020.csv")
+
+county2020 <- county2020 %>%
+  add_column(year = 2020) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2021
+
+
+
+```{r}
+county2021 <- read_csv(".\\inputs\\CDS\\County_2021.csv")
+
+county2021 <- county2021 %>%
+  add_column(year = 2021) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2022
+
+
+
+```{r}
+county2022 <- read_csv(".\\inputs\\CDS\\County_2022.csv")
+
+county2022 <- county2022 %>%
+  add_column(year = 2022) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2023
+
+
+
+```{r}
+county2023 <- read_csv(".\\inputs\\CDS\\County_2023.csv")
+
+county2023 <- county2023 %>%
+  add_column(year = 2023) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+### 2024
+
+
+
+```{r}
+county2024 <- read_csv(".\\inputs\\CDS\\County_2024.csv")
+
+county2024 <- county2024 %>%
+  add_column(year = 2024) %>%
+  select(-c(HA_AFT2000:PRIV_EMP)) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+
+
+## standardize variables
+
+
+
+```{r}
+county2014 <- county2014 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+
+```
+
+```{r}
+county2015 <- county2015 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2016 <- county2016 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2017 <- county2017 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2018 <- county2018 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2019 <- county2019 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2020 <- county2020 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2021 <- county2021 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN),
+         HU_GT_5UN = (HU_5_9UN + HU_10_19UN + HU_GT_19UN)) 
+```
+
+```{r}
+county2022 <- county2022 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN),
+         HU_GT_5UN = (HU_5_9UN + HU_10_19UN + HU_GT_19UN))  
+```
+
+```{r}
+county2023 <- county2023 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN),
+         HU_GT_5UN = (HU_5_9UN + HU_10_19UN + HU_GT_19UN)) 
+```
+
+```{r}
+county2024 <- county2024 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN),
+         HU_GT_5UN = (HU_5_9UN + HU_10_19UN + HU_GT_19UN)) 
+```
+
+
+
+## Binding rows
+
+
+
+```{r}
+county <- bind_rows(county2014,
+          county2015,
+          county2016,
+          county2017,
+          county2018,
+          county2019,
+          county2020,
+          county2021,
+          county2022,
+          county2023,
+          county2024)
+
+county <- county %>%
+  mutate(GEOG = str_replace(GEOG, "CMAP Region", "Region")) %>%
+  mutate(vac_rate = ((VAC_HU/HU_TOT)*100))
+
+
+  
+```
+
+
+
+## adjust for inflation
+
+
+
+```{r}
+inflation <- read_csv(".\\inputs\\inflation.csv")
+
+county <- county %>%
+  full_join(inflation, join_by(year == year)) %>%
+  rename(inflationfac = value) %>%
+  mutate(infl2024 = 313.689/inflationfac) %>% #313.689 is the 2024 inflation factor 
+  mutate(medincome_adjust = infl2024 *MEDINC) %>%
+  mutate(medhv_adjust = infl2024 * MED_HV)
+```
+
+
+
+## units to households
+
+
+
+```{r}
+county <- county %>%
+  mutate(stock_hh = HU_TOT / TOT_HH)
+```
+
+```{r}
+write_csv(county, ".\\county.csv")
+```
+
+
+
+# Line plots
+
+## Total housing units
+
+
+
+```{r}
+total_units_plot <- county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Total housing units` = HU_TOT,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Total housing units`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Total housing units:", scales::comma(`Total housing units`)))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Total housing units") +
+  cmap_color_discrete(palette = "main")
+```
+
+
+
+#### Total housing units plotly export
+
+
+
+```{r}
+total_units_plotly <- 
+ggplotly(total_units_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Total housing units by county, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+total_units_plotly
+
+
+htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
+```
+
+
+
+## Vacancy rate
+
+
+
+```{r}
+vacancy_rate_plot <- 
+  
+  county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Vacancy rate` = vac_rate,
+         Year = year) %>%
+  mutate(`Vacancy rate` = round(`Vacancy rate`, 1))%>%
+  ggplot(aes(x = Year, 
+             y = `Vacancy rate`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Vacancy rate:", `Vacancy rate`))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  geom_hline(yintercept = 8, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 8
+  geom_hline(yintercept = 2, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 2
+  annotate("text", x = 2020, y = 8.25, 
+           label = "Healthy rental vacancy rate",
+           color = "#3C3C3C", 
+           size = 5, 
+           hjust = 0.5,
+           family = "Whitney")+
+  annotate("text", x = 2020, y = 2.25, 
+           label = "Healthy homeowner vacancy rate", 
+           color = "#3C3C3C", 
+           size = 5, 
+           hjust = 0.5,
+           family = "Whitney")+
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Vacancy rate") +
+  cmap_color_discrete(palette = "main")
+```
+
+
+
+### vacancy rate plotly
+
+
+
+```{r}
+vacancy_rate_plotly <- 
+ggplotly(vacancy_rate_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Vacancy rate (percent) by county, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(vacancy_rate_plotly), ".\\docs\\vacancy_rate.html", selfcontained = T)
+```
+
+
+
+## Median household income
+
+
+
+```{r}
+median_hhi_plot <- 
+  county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Median household income` = medincome_adjust,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Median household income`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Median household income (inflation-adjusted to 2024):", scales::comma(`Median household income`)))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Median household income") +
+  cmap_color_discrete(palette = "main")
+```
+
+
+
+### median household income plotly
+
+
+
+```{r}
+median_hhi_plotly <- 
+ggplotly(median_hhi_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Median household income<br>in 2024 inflation-adjusted dollars, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(median_hhi_plotly), ".\\docs\\median_hhi.html", selfcontained = T)
+```
+
+
+
+## Median age
+
+
+
+```{r}
+median_age_plot <- county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Median age` = MED_AGE,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Median age`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Median age:", `Median age`))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Median age") +
+  cmap_color_discrete(palette = "main")
+```
+
+
+
+#### median age plotly
+
+
+
+```{r}
+median_age_plotly <- 
+ggplotly(median_age_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Median age by county, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(median_age_plotly), ".\\docs\\median_age.html", selfcontained = T)
+```
+
+
+
+## Median home value
+
+
+
+```{r}
+median_hv_plot <- 
+  county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Median home value` = medhv_adjust,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Median home value`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Median home value (inflation-adjusted to 2024):", scales::comma(`Median home value`)))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Median home value") +
+  cmap_color_discrete(palette = "main")
+```
+
+
+
+#### median home value
+
+
+
+```{r}
+median_hv_plotly <- 
+ggplotly(median_hv_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Median home value<br>in 2024 inflation-adjusted dollars, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(median_hv_plotly), ".\\docs\\median_hv.html", selfcontained = T)
+```
+
+
+
+# Stacked bar plots
+
+for:
+
+-   housing units in the region
+
+-   vacancy:occupied:renter in the region over time
+
+-   share of single family to multi-family year over year
+
+## housing units grouped by county by year
+
+
+
+```{r}
+total_units <- county %>%
+  filter(GEOG != "Region") %>%
+  select(GEOG,
+         year,
+         HU_TOT) %>%
+  rename(`Total housing units` = HU_TOT,
+         `County` = GEOG) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `County`,
+             y = `Total housing units`,
+             x = year,
+             text = paste("County:", `County`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Total housing units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+  
+```
+
+
+
+### housing units plotly
+
+
+
+```{r}
+units_plotly <- 
+ggplotly(total_units, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing units in<br>northeastern Illinois, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(units_plotly), ".\\docs\\housing_units_bar.html", selfcontained = T)
+```
+
+
+
+## Occupied / vacancies
+
+
+
+```{r}
+tenure_plot <- county %>%
+  filter(GEOG == "Region") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+  
+```
+
+
+
+### occupancy plotly
+
+
+
+```{r}
+tenure_plotly <- 
+ggplotly(tenure_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>northeastern Illinois, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(tenure_plotly), ".\\docs\\housing_tenure.html", selfcontained = T)
+```
+
+
+
+#### Cook County
+
+
+
+```{r}
+tenure_cook <- county %>%
+  filter(GEOG == "Cook County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### Cook plotly
+
+
+
+```{r}
+cooktenure_plotly <- 
+ggplotly(tenure_cook, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>Cook County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(cooktenure_plotly), ".\\docs\\housing_tenure_cook.html", selfcontained = T)
+```
+
+
+
+#### dupage
+
+
+
+```{r}
+tenure_DuPage <- county %>%
+  filter(GEOG == "DuPage County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### DuPage plotly
+
+
+
+```{r}
+DuPagetenure_plotly <- 
+ggplotly(tenure_DuPage, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>DuPage County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(DuPagetenure_plotly), ".\\docs\\housing_tenure_DuPage.html", selfcontained = T)
+```
+
+
+
+#### Kane
+
+
+
+```{r}
+tenure_Kane <- county %>%
+  filter(GEOG == "Kane County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### Kane plotly
+
+
+
+```{r}
+Kanetenure_plotly <- 
+ggplotly(tenure_Kane, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>Kane County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(Kanetenure_plotly), ".\\docs\\housing_tenure_Kane.html", selfcontained = T)
+```
+
+
+
+#### Kendall
+
+
+
+```{r}
+tenure_Kendall <- county %>%
+  filter(GEOG == "Kendall County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### Kendall plotly
+
+
+
+```{r}
+Kendalltenure_plotly <- 
+ggplotly(tenure_Kendall, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>Kendall County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(Kendalltenure_plotly), ".\\docs\\housing_tenure_Kendall.html", selfcontained = T)
+```
+
+
+
+#### Lake
+
+
+
+```{r}
+tenure_Lake <- county %>%
+  filter(GEOG == "Lake County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### Lake plotly
+
+
+
+```{r}
+Laketenure_plotly <- 
+ggplotly(tenure_Lake, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>Lake County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(Laketenure_plotly), ".\\docs\\housing_tenure_Lake.html", selfcontained = T)
+```
+
+
+
+#### Mchenry
+
+
+
+```{r}
+tenure_McHenry <- county %>%
+  filter(GEOG == "McHenry County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### McHenry plotly
+
+
+
+```{r}
+McHenrytenure_plotly <- 
+ggplotly(tenure_McHenry, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>McHenry County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(McHenrytenure_plotly), ".\\docs\\housing_tenure_McHenry.html", selfcontained = T)
+```
+
+
+
+#### Will
+
+
+
+```{r}
+tenure_Will <- county %>%
+  filter(GEOG == "Will County") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+```
+
+
+
+#### Will plotly
+
+
+
+```{r}
+Willtenure_plotly <- 
+ggplotly(tenure_Will, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>Will County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Occupany status",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(Willtenure_plotly), ".\\docs\\housing_tenure_Will.html", selfcontained = T)
+```
+
+
+
+## Housing types
+
+### region
+
+
+
+```{r}
+type_plot <- county %>%
+  filter(GEOG == "Region") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+
+
+#### region plotly
+
+
+
+```{r}
+type_plotly <- 
+ggplotly(type_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>northeastern Illinois, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly), ".\\docs\\housing_type.html", selfcontained = T)
+```
+
+
+
+### cook housing types
+
+
+```{r}
+type_plot_Cook <- county %>%
+  filter(GEOG == "Cook County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+
+
+#### cook plotly
+
+
+
+```{r}
+type_plotly_Cook <- 
+ggplotly(type_plot_Cook, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>Cook County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_Cook), ".\\docs\\housing_type_Cook.html", selfcontained = T)
+```
+
+
+
+### dupage housing types
+
+
+```{r}
+type_plot_DuPage <- county %>%
+  filter(GEOG == "DuPage County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+
+
+#### DuPage plotly
+
+
+
+```{r}
+type_plotly_DuPage <- 
+ggplotly(type_plot_DuPage, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>DuPage County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_DuPage), ".\\docs\\housing_type_DuPage.html", selfcontained = T)
+```
+
+
+
+### Kane housing types
+
+
+```{r}
+type_plot_Kane <- county %>%
+  filter(GEOG == "Kane County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+
+
+#### Kane plotly
+
+
+
+```{r}
+type_plotly_Kane <- 
+ggplotly(type_plot_Kane, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>Kane County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_Kane), ".\\docs\\housing_type_Kane.html", selfcontained = T)
+```
+
+
+
+### Kendall housing types
+
+
+```{r}
+type_plot_Kendall <- county %>%
+  filter(GEOG == "Kendall County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+
+
+#### Kendall plotly
+
+
+
+```{r}
+type_plotly_Kendall <- 
+ggplotly(type_plot_Kendall, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>Kendall County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_Kendall), ".\\docs\\housing_type_Kendall.html", selfcontained = T)
+```
+

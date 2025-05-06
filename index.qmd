@@ -1958,4 +1958,260 @@ ggplotly(type_plot_Kendall, tooltip = "text") %>%
 htmlwidgets::saveWidget(as_widget(type_plotly_Kendall), ".\\docs\\housing_type_Kendall.html", selfcontained = T)
 ```
 
+### Lake housing types
+```{r}
+type_plot_Lake <- county %>%
+  filter(GEOG == "Lake County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
 
+#### Lake plotly
+
+```{r}
+type_plotly_Lake <- 
+ggplotly(type_plot_Lake, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>Lake County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_Lake), ".\\docs\\housing_type_Lake.html", selfcontained = T)
+```
+
+### McHenry housing types
+```{r}
+type_plot_McHenry <- county %>%
+  filter(GEOG == "McHenry County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+#### McHenry plotly
+
+```{r}
+type_plotly_McHenry <- 
+ggplotly(type_plot_McHenry, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>McHenry County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_McHenry), ".\\docs\\housing_type_McHenry.html", selfcontained = T)
+```
+
+### Will Housing types
+```{r}
+type_plot_Will <- county %>%
+  filter(GEOG == "Will County") %>%
+  mutate(HU_2_4UN = (HU_2UN + HU_3_4UN)) %>%
+  select(GEOG,
+         year,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2_4UN,
+         HU_GT_5UN) %>%
+  rename(`Single-family, detached` = HU_SNG_DET,
+         `Single-family, attached` = HU_SNG_ATT,
+         `Multi-family, 2 to 4 units` = HU_2_4UN,
+         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+  pivot_longer(
+    cols = c(`Single-family, detached`,
+             `Single-family, attached`,
+             `Multi-family, 2 to 4 units`,
+             `Mutli-family, greater than 5 units`),  # columns to pivot
+    names_to = "Housing type",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Housing type`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Housing type:", `Housing type`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "governance")
+```
+
+#### Will plotly
+
+```{r}
+type_plotly_Will <- 
+ggplotly(type_plot_Will, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing types in<br>Will County, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "Housing types",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(type_plotly_Will), ".\\docs\\housing_type_Will.html", selfcontained = T)
+```

@@ -2,13 +2,400 @@
 title: "why rehab"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-1 + 1
+# libraries
 
 ```{r}
 library(devtools)
-use_github()
+library(tidyverse, tidycensus)
+library(ggplot2)
+library(plotly)
+library(pak)
+library(cmapplot)
+```
+
+## tidy data
+
+### 2014
+
+```{r}
+county2014 <- read_csv(".\\inputs\\CDS\\County_2014.csv")
+
+county2014 <- county2014 %>%
+  add_column(year = 2014) %>%
+  rename(GEOG = MUNI) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RNT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    ) %>%
+  rename(RENT_OCC_HU = RNT_OCC_HU)
+```
+
+### 2015
+
+```{r}
+county2015 <- read_csv(".\\inputs\\CDS\\County_2015.csv")
+
+county2015 <- county2015 %>%
+  add_column(year = 2015) %>%
+  rename(GEOG = CNTY) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT,
+         HU_SNG_DET,
+         HU_SNG_ATT,
+         HU_2UN,
+         HU_3_4UN,
+         HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2016
+
+```{r}
+county2016 <- read_csv(".\\inputs\\CDS\\County_2016.csv")
+
+county2016 <- county2016 %>%
+  add_column(year = 2016) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2017
+
+```{r}
+county2017 <- read_csv(".\\inputs\\CDS\\County_2017.csv")
+
+county2017 <- county2017 %>%
+  add_column(year = 2017) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2018
+
+```{r}
+county2018 <- read_csv(".\\inputs\\CDS\\County_2018.csv")
+
+county2018 <- county2018 %>%
+  add_column(year = 2018) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2019
+
+```{r}
+county2019 <- read_csv(".\\inputs\\CDS\\County_2019.csv")
+
+county2019 <- county2019 %>%
+  add_column(year = 2019) %>%
+  rename(GEOG = Field1) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2020
+
+```{r}
+county2020 <- read_csv(".\\inputs\\CDS\\County_2020.csv")
+
+county2020 <- county2020 %>%
+  add_column(year = 2020) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_5UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2021
+
+```{r}
+county2021 <- read_csv(".\\inputs\\CDS\\County_2021.csv")
+
+county2021 <- county2021 %>%
+  add_column(year = 2021) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2022
+
+```{r}
+county2022 <- read_csv(".\\inputs\\CDS\\County_2022.csv")
+
+county2022 <- county2022 %>%
+  add_column(year = 2022) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2023
+
+```{r}
+county2023 <- read_csv(".\\inputs\\CDS\\County_2023.csv")
+
+county2023 <- county2023 %>%
+  add_column(year = 2023) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+### 2024
+
+```{r}
+county2024 <- read_csv(".\\inputs\\CDS\\County_2024.csv")
+
+county2024 <- county2024 %>%
+  add_column(year = 2024) %>%
+  select(-c(HA_AFT2000:PRIV_EMP)) %>%
+  select(GEOG,  # GEO
+         MEDINC,   # MEDIAN INCOME
+         HU_TOT:HU_GT_19UN,  # HOUSING UNITS AND TYPE
+         TOT_POP,  # POPULATION
+         MED_HV,   # MEDIAN HOME VALUE
+         TOT_HH,   # TOTAL HOUSEHOLDS
+         OWN_OCC_HU,  # OWNER OCCUPIED
+         RENT_OCC_HU,  # RENTER OCCUPIED
+         VAC_HU,  # VACANT UNITS
+         MED_AGE,   # MEDIAN AGE
+         H_Cost_Typical, # % income spent on housing for typical family
+         year)%>%  # year
+    relocate(year,
+             .after = GEOG
+    )
+```
+
+## standardize variables
+
+```{r}
+county2014 <- county2014 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+
+```
+
+```{r}
+county2015 <- county2015 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2016 <- county2016 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2017 <- county2017 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2018 <- county2018 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2019 <- county2019 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2020 <- county2020 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+```
+
+```{r}
+county2021 <- county2021 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN)) 
+```
+
+```{r}
+county2022 <- county2022 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN))  
+```
+
+```{r}
+county2023 <- county2023 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN)) 
+```
+
+```{r}
+county2024 <- county2024 %>%
+  mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
+         multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
+                        HU_10_19UN + HU_GT_19UN)) 
+```
+
+## Binding rows
+
+```{r}
+county <- bind_rows(county2014,
+          county2015,
+          county2016,
+          county2017,
+          county2018,
+          county2019,
+          county2020,
+          county2021,
+          county2022,
+          county2023,
+          county2024)
+
+county <- county %>%
+  mutate(GEOG = str_replace(GEOG, "CMAP Region", "Region")) %>%
+  mutate(vac_rate = ((VAC_HU/HU_TOT)*100))
+
+
+  
+```
+
+## adjust for inflation
+
+```{r}
+inflation <- read_csv(".\\inputs\\inflation.csv")
+
+county <- county %>%
+  full_join(inflation, join_by(year == year)) %>%
+  rename(inflationfac = value) %>%
+  mutate(infl2024 = 313.689/inflationfac) %>% #313.689 is the 2024 inflation factor 
+  mutate(medincome_adjust = infl2024 *MEDINC) %>%
+  mutate(medhv_adjust = infl2024 * MED_HV)
+```
+
+## units to households
+
+```{r}
+county <- county %>%
+  mutate(stock_hh = HU_TOT / TOT_HH)
 ```

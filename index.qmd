@@ -784,11 +784,40 @@ htmlwidgets::saveWidget(as_widget(median_hv_plotly), ".\\docs\\median_hv.html", 
 
 for:
 
+-   housing units in the region
+
 -   vacancy:occupied in the region over time
 
 -   renter:owner occupied
 
 -   share of single family to multi-family year over year
+
+## housing units grouped by county by year
+
+```{r}
+total_units <- county %>%
+  filter(GEOG != "Region") %>%
+  select(GEOG,
+         year,
+         HU_TOT) %>%
+  rename(`Total housing units` = HU_TOT,
+         `County` = GEOG) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `County`,
+             y = `Total housing units`,
+             x = year,
+             text = paste("County:", `County`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Total housing units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+  
+```
 
 ## Occupied / vacancies
 
@@ -956,6 +985,7 @@ htmlwidgets::saveWidget(as_widget(cooktenure_plotly), ".\\docs\\housing_tenure_c
 ```
 
 #### dupage
+
 ```{r}
 tenure_DuPage <- county %>%
   filter(GEOG == "DuPage County") %>%
@@ -1037,6 +1067,7 @@ htmlwidgets::saveWidget(as_widget(DuPagetenure_plotly), ".\\docs\\housing_tenure
 ```
 
 #### Kane
+
 ```{r}
 tenure_Kane <- county %>%
   filter(GEOG == "Kane County") %>%
@@ -1117,8 +1148,8 @@ ggplotly(tenure_Kane, tooltip = "text") %>%
 htmlwidgets::saveWidget(as_widget(Kanetenure_plotly), ".\\docs\\housing_tenure_Kane.html", selfcontained = T)
 ```
 
-
 #### Kendall
+
 ```{r}
 tenure_Kendall <- county %>%
   filter(GEOG == "Kendall County") %>%
@@ -1200,6 +1231,7 @@ htmlwidgets::saveWidget(as_widget(Kendalltenure_plotly), ".\\docs\\housing_tenur
 ```
 
 #### Lake
+
 ```{r}
 tenure_Lake <- county %>%
   filter(GEOG == "Lake County") %>%
@@ -1281,6 +1313,7 @@ htmlwidgets::saveWidget(as_widget(Laketenure_plotly), ".\\docs\\housing_tenure_L
 ```
 
 #### Mchenry
+
 ```{r}
 tenure_McHenry <- county %>%
   filter(GEOG == "McHenry County") %>%
@@ -1362,6 +1395,7 @@ htmlwidgets::saveWidget(as_widget(McHenrytenure_plotly), ".\\docs\\housing_tenur
 ```
 
 #### Will
+
 ```{r}
 tenure_Will <- county %>%
   filter(GEOG == "Will County") %>%

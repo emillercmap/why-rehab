@@ -411,6 +411,7 @@ write_csv(county, ".\\county.csv")
 # Plots
 
 ## Total housing units
+
 ```{r}
 total_units_plot <- county %>%
   filter(GEOG != "Region") %>%
@@ -433,6 +434,7 @@ total_units_plot <- county %>%
 ```
 
 #### Total housing units plotly export
+
 ```{r}
 total_units_plotly <- 
 ggplotly(total_units_plot, tooltip = "text") %>%
@@ -480,6 +482,7 @@ htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.htm
 ```
 
 ## Vacancy rate
+
 ```{r}
 vacancy_rate_plot <- 
   
@@ -519,6 +522,7 @@ vacancy_rate_plot <-
 ```
 
 ### vacancy rate plotly
+
 ```{r}
 vacancy_rate_plotly <- 
 ggplotly(vacancy_rate_plot, tooltip = "text") %>%
@@ -565,6 +569,7 @@ htmlwidgets::saveWidget(as_widget(vacancy_rate_plotly), ".\\docs\\vacancy_rate.h
 ```
 
 ## Median household income
+
 ```{r}
 median_hhi_plot <- 
   county %>%
@@ -586,7 +591,9 @@ median_hhi_plot <-
              ylab = "Median household income") +
   cmap_color_discrete(palette = "main")
 ```
+
 ### median household income plotly
+
 ```{r}
 median_hhi_plotly <- 
 ggplotly(median_hhi_plot, tooltip = "text") %>%
@@ -633,6 +640,7 @@ htmlwidgets::saveWidget(as_widget(median_hhi_plotly), ".\\docs\\median_hhi.html"
 ```
 
 ## Median age
+
 ```{r}
 median_age_plot <- county %>%
   filter(GEOG != "Region") %>%
@@ -655,6 +663,7 @@ median_age_plot <- county %>%
 ```
 
 #### median age plotly
+
 ```{r}
 median_age_plotly <- 
 ggplotly(median_age_plot, tooltip = "text") %>%
@@ -700,3 +709,73 @@ ggplotly(median_age_plot, tooltip = "text") %>%
 htmlwidgets::saveWidget(as_widget(median_age_plotly), ".\\docs\\median_age.html", selfcontained = T)
 ```
 
+## Median home value
+
+```{r}
+median_hv_plot <- 
+  county %>%
+  filter(GEOG != "Region") %>%
+  rename(County = GEOG,
+         `Median home value` = medhv_adjust,
+         Year = year) %>%
+  ggplot(aes(x = Year, 
+             y = `Median home value`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Median home value (inflation-adjusted to 2024):", scales::comma(`Median home value`)))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Median home value") +
+  cmap_color_discrete(palette = "main")
+```
+
+#### median home value
+
+```{r}
+median_hv_plotly <- 
+ggplotly(median_hv_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Median home value<br>in 2024 inflation-adjusted dollars, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(median_hv_plotly), ".\\docs\\median_hv.html", selfcontained = T)
+```

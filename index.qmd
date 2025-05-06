@@ -408,7 +408,7 @@ county <- county %>%
 write_csv(county, ".\\county.csv")
 ```
 
-# Plots
+# Line plots
 
 ## Total housing units
 
@@ -778,4 +778,97 @@ ggplotly(median_hv_plot, tooltip = "text") %>%
 
 
 htmlwidgets::saveWidget(as_widget(median_hv_plotly), ".\\docs\\median_hv.html", selfcontained = T)
+```
+
+# Stacked bar plots
+
+for:
+
+-   vacancy:occupied in the region over time
+
+-   renter:owner occupied
+
+-   share of single family to multi-family year over year
+
+## Occupied / vacancies
+
+```{r}
+tenure_plot <- county %>%
+  filter(GEOG == "Region") %>%
+  select(GEOG,
+         year,
+         OWN_OCC_HU:VAC_HU) %>%
+  rename(`Owner-occupied` = OWN_OCC_HU,
+         `Renter-occupied` = RENT_OCC_HU,
+         `Vacant`=VAC_HU) %>%
+  pivot_longer(
+    cols = c(`Owner-occupied`,
+             `Renter-occupied`,
+             `Vacant`),  # columns to pivot
+    names_to = "Occupancy status",        # new column for names
+    values_to = "Number of units"               # new column for values
+  ) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `Occupancy status`,
+             y = `Number of units`,
+             x = year,
+             text = paste("Occupancy status:", `Occupancy status`,
+                          "<br>Year:", year,
+                          "<br>Number of housing units:", scales::comma(`Number of units`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Number of housing units") +
+  cmap_fill_discrete(palette = "main")
+
+  
+```
+
+### occupancy plotly
+
+```{r}
+tenure_plotly <- 
+ggplotly(tenure_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Housing tenure in<br>northeastern Illinois, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(tenure_plotly), ".\\docs\\housing_tenure.html", selfcontained = T)
 ```

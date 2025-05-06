@@ -854,7 +854,7 @@ ggplotly(tenure_plot, tooltip = "text") %>%
     legend = list(
       font = list(family = "Whitney", size = 18),
       title = list(
-        text = "County",  # Title for legend
+        text = "Occupany status",  # Title for legend
         font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
       )
     ),

@@ -486,6 +486,7 @@ htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.htm
 ```
 
 ## Total population
+
 ```{r}
 total_population_plot <- county %>%
   filter(GEOG != "Region") %>%
@@ -508,6 +509,7 @@ total_population_plot <- county %>%
 ```
 
 ### total population plotly export
+
 ```{r}
 total_population_plotly <- 
 ggplotly(total_population_plot, tooltip = "text") %>%
@@ -857,11 +859,87 @@ htmlwidgets::saveWidget(as_widget(median_hv_plotly), ".\\docs\\median_hv.html", 
 
 for:
 
+-   total population
+
 -   housing units in the region
 
 -   vacancy:occupied:renter in the region over time
 
 -   share of single family to multi-family year over year
+
+## total population
+
+```{r}
+total_population_bar <- 
+  county %>%
+  filter(GEOG != "Region") %>%
+  select(GEOG,
+         year,
+         TOT_POP) %>%
+  rename(`Total population` = TOT_POP,
+         `County` = GEOG) %>%
+  group_by(year) %>%
+  ggplot(aes(fill = `County`,
+             y = `Total population`,
+             x = year,
+             text = paste("County:", `County`,
+                          "<br>Year:", year,
+                          "<br>Population", scales::comma(`Total population`)))) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  theme_cmap(xlab = "Year",
+             ylab = "Population") +
+  cmap_fill_discrete(palette = "main")
+```
+
+### total population plotly 
+
+```{r}
+total_population_bar_plotly <- 
+ggplotly(total_population_bar, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Population counts<br>in northeastern Illinois, 2014-2024",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",  # Title for legend
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")  # Legend title font
+      )
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(total_population_bar_plotly), ".\\docs\\population_bar.html", selfcontained = T)
+```
 
 ## housing units grouped by county by year
 
@@ -1644,7 +1722,7 @@ ggplotly(type_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>northeastern Illinois, 2014-2024",
+      text = "Housing types in<br>northeastern Illinois, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1684,6 +1762,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly), ".\\docs\\housing_type.html", se
 ```
 
 ### cook housing types
+
 ```{r}
 type_plot_Cook <- county %>%
   filter(GEOG == "Cook County") %>%
@@ -1730,7 +1809,7 @@ ggplotly(type_plot_Cook, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Cook County, 2014-2024",
+      text = "Housing types in<br>Cook County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1770,6 +1849,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_Cook), ".\\docs\\housing_type_Cook
 ```
 
 ### dupage housing types
+
 ```{r}
 type_plot_DuPage <- county %>%
   filter(GEOG == "DuPage County") %>%
@@ -1816,7 +1896,7 @@ ggplotly(type_plot_DuPage, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>DuPage County, 2014-2024",
+      text = "Housing types in<br>DuPage County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1856,6 +1936,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_DuPage), ".\\docs\\housing_type_Du
 ```
 
 ### Kane housing types
+
 ```{r}
 type_plot_Kane <- county %>%
   filter(GEOG == "Kane County") %>%
@@ -1902,7 +1983,7 @@ ggplotly(type_plot_Kane, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Kane County, 2014-2024",
+      text = "Housing types in<br>Kane County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1942,6 +2023,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_Kane), ".\\docs\\housing_type_Kane
 ```
 
 ### Kendall housing types
+
 ```{r}
 type_plot_Kendall <- county %>%
   filter(GEOG == "Kendall County") %>%
@@ -1988,7 +2070,7 @@ ggplotly(type_plot_Kendall, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Kendall County, 2014-2024",
+      text = "Housing types in<br>Kendall County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2028,6 +2110,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_Kendall), ".\\docs\\housing_type_K
 ```
 
 ### Lake housing types
+
 ```{r}
 type_plot_Lake <- county %>%
   filter(GEOG == "Lake County") %>%
@@ -2074,7 +2157,7 @@ ggplotly(type_plot_Lake, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Lake County, 2014-2024",
+      text = "Housing types in<br>Lake County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2114,6 +2197,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_Lake), ".\\docs\\housing_type_Lake
 ```
 
 ### McHenry housing types
+
 ```{r}
 type_plot_McHenry <- county %>%
   filter(GEOG == "McHenry County") %>%
@@ -2160,7 +2244,7 @@ ggplotly(type_plot_McHenry, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>McHenry County, 2014-2024",
+      text = "Housing types in<br>McHenry County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2200,6 +2284,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_McHenry), ".\\docs\\housing_type_M
 ```
 
 ### Will Housing types
+
 ```{r}
 type_plot_Will <- county %>%
   filter(GEOG == "Will County") %>%
@@ -2246,7 +2331,7 @@ ggplotly(type_plot_Will, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Will County, 2014-2024",
+      text = "Housing types in<br>Will County, 2015-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)

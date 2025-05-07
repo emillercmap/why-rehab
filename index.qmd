@@ -19,7 +19,7 @@ library(scales)
 
 ## tidy data
 
-### 2014
+### 2014 (2008-2012 ACS data)
 
 ```{r}
 county2014 <- read_csv(".\\inputs\\CDS\\County_2014.csv")
@@ -142,7 +142,7 @@ county2018 <- county2018 %>%
     )
 ```
 
-### 2019
+### 2019 (2013-2017 data)
 
 ```{r}
 county2019 <- read_csv(".\\inputs\\CDS\\County_2019.csv")
@@ -263,7 +263,7 @@ county2023 <- county2023 %>%
     )
 ```
 
-### 2024
+### 2024 (2018-2022)
 
 ```{r}
 county2024 <- read_csv(".\\inputs\\CDS\\County_2024.csv")
@@ -293,7 +293,8 @@ county2024 <- county2024 %>%
 ```{r}
 county2014 <- county2014 %>%
   mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
-         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) %>%
+  mutate(year =2012)
 
 ```
 
@@ -324,7 +325,8 @@ county2018 <- county2018 %>%
 ```{r}
 county2019 <- county2019 %>%
   mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
-         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) 
+         multi_fam = (HU_2UN + HU_3_4UN + HU_GT_5UN)) %>%
+  mutate(year = 2017)
 ```
 
 ```{r}
@@ -362,22 +364,15 @@ county2024 <- county2024 %>%
   mutate(single_fam = (HU_SNG_DET + HU_SNG_ATT),
          multi_fam = (HU_2UN + HU_3_4UN + HU_5_9UN +
                         HU_10_19UN + HU_GT_19UN),
-         HU_GT_5UN = (HU_5_9UN + HU_10_19UN + HU_GT_19UN)) 
+         HU_GT_5UN = (HU_5_9UN + HU_10_19UN + HU_GT_19UN)) %>%
+  mutate(year = 2022)
 ```
 
 ## Binding rows
 
 ```{r}
 county <- bind_rows(county2014,
-          county2015,
-          county2016,
-          county2017,
-          county2018,
           county2019,
-          county2020,
-          county2021,
-          county2022,
-          county2023,
           county2024)
 
 county <- county %>%
@@ -396,9 +391,9 @@ inflation <- read_csv(".\\inputs\\inflation.csv")
 county <- county %>%
   full_join(inflation, join_by(year == year)) %>%
   rename(inflationfac = value) %>%
-  mutate(infl2024 = 313.689/inflationfac) %>% #313.689 is the 2024 inflation factor 
-  mutate(medincome_adjust = infl2024 *MEDINC) %>%
-  mutate(medhv_adjust = infl2024 * MED_HV)
+  mutate(infl2022 = 292.655/inflationfac) %>% #292.655 is the 2022 inflation factor 
+  mutate(medincome_adjust = infl2022 *MEDINC) %>%
+  mutate(medhv_adjust = infl2022 * MED_HV)
 ```
 
 ## units to households
@@ -658,7 +653,7 @@ median_hhi_plot <-
              group = County,
              text = paste("County:", County,
                           "<br>Year:", Year,
-                          "<br>Median household income (inflation-adjusted to 2024):", scales::comma(`Median household income`)))) +
+                          "<br>Median household income (inflation-adjusted to 2022):", scales::comma(`Median household income`)))) +
   geom_line(linewidth = 1) +
   geom_point() +
   scale_y_continuous(labels = scales::comma_format()) +
@@ -731,7 +726,9 @@ median_age_plot <- county %>%
                           "<br>Median age:", `Median age`))) +
   geom_line(linewidth = 1) +
   geom_point() +
-  scale_y_continuous(labels = scales::comma_format()) +
+  scale_y_continuous(expand = c(0,0), 
+                     limits = c(0,45),
+                     labels = scales::comma_format()) +
   theme_cmap(xlab = "Year",
              ylab = "Median age") +
   cmap_color_discrete(palette = "main")
@@ -894,7 +891,7 @@ total_population_bar <-
   cmap_fill_discrete(palette = "main")
 ```
 
-### total population plotly 
+### total population plotly
 
 ```{r}
 total_population_bar_plotly <- 

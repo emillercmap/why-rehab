@@ -426,6 +426,9 @@ total_units_plot <- county %>%
                           "<br>Total housing units:", scales::comma(`Total housing units`)))) +
   geom_line(linewidth = 1) +
   geom_point() +
+  scale_x_continuous(
+  breaks = c(2012, 2017, 2022),
+  labels = c("2012", "2017", "2022"))+
   scale_y_continuous(labels = scales::comma_format()) +
   theme_cmap(xlab = "Year",
              ylab = "Total housing units") +
@@ -571,21 +574,26 @@ vacancy_rate_plot <-
                           "<br>Vacancy rate:", `Vacancy rate`))) +
   geom_line(linewidth = 1) +
   geom_point() +
-  geom_hline(yintercept = 8, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 8
-  geom_hline(yintercept = 2, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 2
-  annotate("text", x = 2020, y = 8.25, 
-           label = "Healthy rental vacancy rate",
+  geom_hline(yintercept = 12, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 8
+  # geom_hline(yintercept = 2, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 2
+  annotate("text", x = 2020, y = 12.5, 
+           label = "High vacancy rate",
            color = "#3C3C3C", 
            size = 5, 
            hjust = 0.5,
            family = "Whitney")+
-  annotate("text", x = 2020, y = 2.25, 
-           label = "Healthy homeowner vacancy rate", 
-           color = "#3C3C3C", 
-           size = 5, 
-           hjust = 0.5,
-           family = "Whitney")+
-  scale_y_continuous(labels = scales::comma_format()) +
+  # annotate("text", x = 2020, y = 2.25, 
+          # label = "Healthy homeowner vacancy rate", 
+          # color = "#3C3C3C", 
+          # size = 5, 
+          # hjust = 0.5,
+          # family = "Whitney")+
+  scale_x_continuous(
+    breaks = seq(min(.$Year), max(.$Year), by = 1),
+    labels = label_number(accuracy = 1)) +
+  scale_y_continuous(expand = c(0,0), 
+                     limits = c(0,14),
+                     labels = scales::comma_format()) +
   theme_cmap(xlab = "Year",
              ylab = "Vacancy rate") +
   cmap_color_discrete(palette = "main")
@@ -599,7 +607,7 @@ ggplotly(vacancy_rate_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Vacancy rate (percent) by county, 2014-2024",
+      text = "Vacancy rate (percent) by county, 2014-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)

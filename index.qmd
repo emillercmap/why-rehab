@@ -17,7 +17,7 @@ library(scales)
 
 ```
 
-## tidy data
+# tidy data
 
 ### 2014 (2008-2012 ACS data)
 
@@ -443,7 +443,7 @@ ggplotly(total_units_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Total housing units by county, 2014-2024",
+      text = "Total housing units by county, 2012-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -500,6 +500,10 @@ total_population_plot <- county %>%
                           "<br>Total population:", scales::comma(`Total population`)))) +
   geom_line(linewidth = 1) +
   geom_point() +
+  scale_x_continuous(
+  breaks = c(2012, 2017, 2022),
+  labels = c("2012", "2017", "2022"))+
+  scale_y_continuous(labels = scales::comma_format()) +
   scale_y_continuous(labels = scales::comma_format()) +
   theme_cmap(xlab = "Year",
              ylab = "Total population") +
@@ -514,7 +518,7 @@ ggplotly(total_population_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Northeastern Illinois population counts, 2014-2024",
+      text = "Northeastern Illinois population counts, 2012-2024",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -588,9 +592,10 @@ vacancy_rate_plot <-
           # size = 5, 
           # hjust = 0.5,
           # family = "Whitney")+
-  scale_x_continuous(
-    breaks = seq(min(.$Year), max(.$Year), by = 1),
-    labels = label_number(accuracy = 1)) +
+scale_x_continuous(
+  breaks = c(2012, 2017, 2022),
+  labels = c("2012", "2017", "2022"))+
+  scale_y_continuous(labels = scales::comma_format()) +
   scale_y_continuous(expand = c(0,0), 
                      limits = c(0,14),
                      labels = scales::comma_format()) +
@@ -607,7 +612,7 @@ ggplotly(vacancy_rate_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Vacancy rate (percent) by county, 2014-2022",
+      text = "Vacancy rate (percent) by county, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -664,7 +669,12 @@ median_hhi_plot <-
                           "<br>Median household income (inflation-adjusted to 2022):", scales::comma(`Median household income`)))) +
   geom_line(linewidth = 1) +
   geom_point() +
-  scale_y_continuous(labels = scales::comma_format()) +
+  scale_x_continuous(
+  breaks = c(2012, 2017, 2022),
+  labels = c("2012", "2017", "2022"))+
+  scale_y_continuous(expand = c(0,0), 
+                     limits = c(0,125000),
+                     labels = scales::comma_format()) +
   theme_cmap(xlab = "Year",
              ylab = "Median household income") +
   cmap_color_discrete(palette = "main")
@@ -678,7 +688,7 @@ ggplotly(median_hhi_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Median household income<br>in 2024 inflation-adjusted dollars, 2014-2024",
+      text = "Median household income<br>in 2022 inflation-adjusted dollars, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -734,6 +744,9 @@ median_age_plot <- county %>%
                           "<br>Median age:", `Median age`))) +
   geom_line(linewidth = 1) +
   geom_point() +
+    scale_x_continuous(
+  breaks = c(2012, 2017, 2022),
+  labels = c("2012", "2017", "2022"))+
   scale_y_continuous(expand = c(0,0), 
                      limits = c(0,45),
                      labels = scales::comma_format()) +
@@ -750,7 +763,7 @@ ggplotly(median_age_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Median age by county, 2014-2024",
+      text = "Median age by county, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -804,10 +817,15 @@ median_hv_plot <-
              group = County,
              text = paste("County:", County,
                           "<br>Year:", Year,
-                          "<br>Median home value (inflation-adjusted to 2024):", scales::comma(`Median home value`)))) +
+                          "<br>Median home value (inflation-adjusted to 2022):", scales::comma(`Median home value`)))) +
   geom_line(linewidth = 1) +
   geom_point() +
-  scale_y_continuous(labels = scales::comma_format()) +
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
+  scale_y_continuous(expand = c(0,0), 
+                     limits = c(0,400000),
+                     labels = scales::comma_format()) +
   theme_cmap(xlab = "Year",
              ylab = "Median home value") +
   cmap_color_discrete(palette = "main")
@@ -821,7 +839,7 @@ ggplotly(median_hv_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Median home value<br>in 2024 inflation-adjusted dollars, 2014-2024",
+      text = "Median home value<br>in 2022 inflation-adjusted dollars, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)

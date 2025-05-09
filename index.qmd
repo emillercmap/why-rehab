@@ -368,7 +368,7 @@ county2024 <- county2024 %>%
   mutate(year = 2022)
 ```
 
-## Binding rows
+## Binding rows and adding region 2012 entry
 
 ```{r}
 county <- bind_rows(county2014,
@@ -376,7 +376,25 @@ county <- bind_rows(county2014,
           county2024)
 
 county <- county %>%
-  mutate(GEOG = str_replace(GEOG, "CMAP Region", "Region")) %>%
+  mutate(GEOG = str_replace(GEOG, "CMAP Region", "Region")) 
+
+### add 2012 entry for region
+region2012 <- county %>%
+  filter(year == 2012) %>%
+  summarise(across(HU_TOT:VAC_HU, ~ sum(.x, na.rm = T)))
+
+region_row <- county %>%
+  slice(0) %>%
+  add_row(
+    GEOG = "Region",
+    year = 2012,
+    !!!region2012
+  )
+
+county <- bind_rows(county, region_row)
+
+
+county <- county %>%
   mutate(vac_rate = ((VAC_HU/HU_TOT)*100))
 
 
@@ -402,6 +420,8 @@ county <- county %>%
 county <- county %>%
   mutate(stock_hh = HU_TOT / TOT_HH)
 ```
+
+
 
 ```{r}
 write_csv(county, ".\\county.csv")
@@ -649,6 +669,49 @@ ggplotly(vacancy_rate_plot, tooltip = "text") %>%
 
 
 htmlwidgets::saveWidget(as_widget(vacancy_rate_plotly), ".\\docs\\vacancy_rate.html", selfcontained = T)
+```
+
+## regional vacancy rate
+```{r}
+ county %>%
+  filter(GEOG == "Region") %>%
+  rename(County = GEOG,
+         `Vacancy rate` = vac_rate,
+         Year = year) %>%
+  mutate(`Vacancy rate` = round(`Vacancy rate`, 1))%>%
+  ggplot(aes(x = Year, 
+             y = `Vacancy rate`, 
+             color = County,
+             group = County,
+             text = paste("County:", County,
+                          "<br>Year:", Year,
+                          "<br>Vacancy rate:", `Vacancy rate`))) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  geom_hline(yintercept = 12, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 8
+  # geom_hline(yintercept = 2, linetype = "dashed", color = "#3C3C3C", size = 1) +  # Line at y = 2
+  annotate("text", x = 2020, y = 12.5, 
+           label = "High vacancy rate",
+           color = "#3C3C3C", 
+           size = 5, 
+           hjust = 0.5,
+           family = "Whitney")+
+  # annotate("text", x = 2020, y = 2.25, 
+          # label = "Healthy homeowner vacancy rate", 
+          # color = "#3C3C3C", 
+          # size = 5, 
+          # hjust = 0.5,
+          # family = "Whitney")+
+scale_x_continuous(
+  breaks = c(2012, 2017, 2022),
+  labels = c("2012", "2017", "2022"))+
+  scale_y_continuous(labels = scales::comma_format()) +
+  scale_y_continuous(expand = c(0,0), 
+                     limits = c(0,14),
+                     labels = scales::comma_format()) +
+  theme_cmap(xlab = "Year",
+             ylab = "Vacancy rate") +
+  cmap_color_discrete(palette = "main")
 ```
 
 ## Median household income
@@ -910,7 +973,9 @@ total_population_bar <-
                           "<br>Population", scales::comma(`Total population`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Population") +
@@ -983,7 +1048,9 @@ total_units <- county %>%
                           "<br>Number of housing units:", scales::comma(`Total housing units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1065,7 +1132,9 @@ tenure_plot <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1148,7 +1217,9 @@ tenure_cook <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1230,7 +1301,9 @@ tenure_DuPage <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1312,7 +1385,9 @@ tenure_Kane <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1394,7 +1469,9 @@ tenure_Kendall <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1476,7 +1553,9 @@ tenure_Lake <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1558,7 +1637,9 @@ tenure_McHenry <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1640,7 +1721,9 @@ tenure_Will <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1712,12 +1795,12 @@ type_plot <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -1730,7 +1813,9 @@ type_plot <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1799,12 +1884,12 @@ type_plot_Cook <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -1817,7 +1902,9 @@ type_plot_Cook <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1886,12 +1973,12 @@ type_plot_DuPage <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -1904,7 +1991,9 @@ type_plot_DuPage <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -1973,12 +2062,12 @@ type_plot_Kane <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -1991,7 +2080,9 @@ type_plot_Kane <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(
+    breaks = c(2012, 2017, 2022),
+    labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -2060,12 +2151,12 @@ type_plot_Kendall <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -2078,7 +2169,7 @@ type_plot_Kendall <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(     breaks = c(2012, 2017, 2022),     labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -2147,12 +2238,12 @@ type_plot_Lake <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -2165,7 +2256,7 @@ type_plot_Lake <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(     breaks = c(2012, 2017, 2022),     labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -2234,12 +2325,12 @@ type_plot_McHenry <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -2252,7 +2343,7 @@ type_plot_McHenry <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(     breaks = c(2012, 2017, 2022),     labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +
@@ -2321,12 +2412,12 @@ type_plot_Will <- county %>%
   rename(`Single-family, detached` = HU_SNG_DET,
          `Single-family, attached` = HU_SNG_ATT,
          `Multi-family, 2 to 4 units` = HU_2_4UN,
-         `Mutli-family, greater than 5 units` = HU_GT_5UN) %>%
+         `Multi-family, greater than 5 units` = HU_GT_5UN) %>%
   pivot_longer(
     cols = c(`Single-family, detached`,
              `Single-family, attached`,
              `Multi-family, 2 to 4 units`,
-             `Mutli-family, greater than 5 units`),  # columns to pivot
+             `Multi-family, greater than 5 units`),  # columns to pivot
     names_to = "Housing type",        # new column for names
     values_to = "Number of units"               # new column for values
   ) %>%
@@ -2339,7 +2430,8 @@ type_plot_Will <- county %>%
                           "<br>Number of housing units:", scales::comma(`Number of units`)))) +
   geom_bar(stat = "identity", position = "stack") +
   scale_y_continuous(labels = scales::label_comma()) +
-  scale_x_continuous(breaks = seq(min(county$year), max(county$year), by = 1))+
+  scale_x_continuous(     breaks = c(2012, 2017, 2022),     
+                          labels = c("2012", "2017", "2022"))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   theme_cmap(xlab = "Year",
              ylab = "Number of housing units") +

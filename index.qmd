@@ -2484,3 +2484,109 @@ ggplotly(type_plot_Will, tooltip = "text") %>%
 
 htmlwidgets::saveWidget(as_widget(type_plotly_Will), ".\\docs\\housing_type_Will.html", selfcontained = T)
 ```
+
+# utilities and income
+
+## reading and cleaning data
+```{r}
+utilities <- read_csv(".//inputs//utilities_income.csv")
+utilities_join <- read_csv(".//inputs//utility_join_brackets.csv")
+
+utilities <- utilities %>%
+  filter(cost == "Median (dollars)") %>%
+  pivot_longer(
+    `Less than $10,000`:`$200,000 or more`,
+    names_to = "bracket",
+    values_to = "med_util"
+    ) %>%
+  rename(var = cost) %>%
+  select(-Total)
+
+utilities <- utilities %>%
+  left_join(utilities_join) 
+```
+## Manipulating table
+```{r}
+utilities <- utilities %>%
+  mutate(upper_lim = as.numeric(upper_lim),
+         lower_lim = as.numeric(lower_lim),
+         med_util = as.numeric(med_util),
+         midpt_range = as.numeric(midpt_range)) %>%
+  mutate(max_monthly_income = round(upper_lim/12, 2),
+         min_monthly_income = round(lower_lim/12, 2),
+         mid_monthly_income = round(midpt_range/12, 2)) %>%
+  mutate(pct_util_max = round((med_util/max_monthly_income)*100, 1),
+         pct_util_min = round((med_util/min_monthly_income)*100, 1),
+         pct_util_mid = round((med_util/mid_monthly_income)*100, 1)
+  ) %>%
+  mutate(left_over = 100 - mid_monthly_income) %>%
+  mutate(bracket = factor(bracket, levels = c("Less than $10,000",
+                                              "$10,000 to $19,999",
+                                              "$20,000 to $29,999",
+                                              "$30,000 to $39,999",
+                                              "$40,000 to $49,999",
+                                              "$50,000 to $59,999",
+                                              "$60,000 to $79,999",
+                                              "$80,000 to $99,999",
+                                              "$100,000 to $119,999",
+                                              "$120,000 to $139,999",
+                                              "$140,000 to $159,999",
+                                              "$160,000 to $179,999",
+                                              "$180,000 to $199,999",
+                                              "$200,000 or more")))
+```
+
+# utility cost chart
+```{r}
+
+utility_plot <- utilities %>%
+  ggplot(aes(y = pct_util_mid,
+             x = bracket,
+             text = paste("Median monthly utility costs as a percentage of monthly household income:", `pct_util_mid`)))+
+  geom_bar(stat = "identity", fill = "#1E478E") +
+  theme_cmap(xlab = "Household income bracket",
+             ylab = "Percentage of monthly household\nincome for midpoint of bracket") +
+    theme(
+    axis.text.x = element_text(angle = 90, hjust = 1)
+  )
+```
+
+## utility plotly
+```{r}
+utility_plotly <- 
+ggplotly(utility_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Median monthly utility costs<br>as a percentage of household income, 2023",
+      font = list(family = "Whitney Semibold", 
+                  weight = "bold",
+                  size = 32)
+    ),
+    xaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # x-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # x-axis tick labels font
+    ),
+    yaxis = list(
+      title = list(
+        font = list(family = "Whitney", size = 20)  # y-axis title font
+      ),
+      tickfont = list(family = "Whitney", size = 20)  # y-axis tick labels font
+    ),
+    # Customizing the tooltip
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),  # Tooltip text font
+      bgcolor = "rgba(255, 255, 255, 0.7)",       # Tooltip background color
+      bordercolor = "black"                        # Tooltip border color
+    ),
+    margin =(list(t = 100))
+  )
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(utility_plotly), ".\\docs\\utility_costs.html", selfcontained = T)
+```
+

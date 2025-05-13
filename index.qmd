@@ -421,8 +421,6 @@ county <- county %>%
   mutate(stock_hh = HU_TOT / TOT_HH)
 ```
 
-
-
 ```{r}
 write_csv(county, ".\\county.csv")
 ```
@@ -672,6 +670,7 @@ htmlwidgets::saveWidget(as_widget(vacancy_rate_plotly), ".\\docs\\vacancy_rate.h
 ```
 
 ## regional vacancy rate
+
 ```{r}
  county %>%
   filter(GEOG == "Region") %>%
@@ -2488,6 +2487,7 @@ htmlwidgets::saveWidget(as_widget(type_plotly_Will), ".\\docs\\housing_type_Will
 # utilities and income
 
 ## reading and cleaning data
+
 ```{r}
 utilities <- read_csv(".//inputs//utilities_income.csv")
 utilities_join <- read_csv(".//inputs//utility_join_brackets.csv")
@@ -2505,7 +2505,9 @@ utilities <- utilities %>%
 utilities <- utilities %>%
   left_join(utilities_join) 
 ```
+
 ## Manipulating table
+
 ```{r}
 utilities <- utilities %>%
   mutate(upper_lim = as.numeric(upper_lim),
@@ -2537,6 +2539,7 @@ utilities <- utilities %>%
 ```
 
 # utility cost chart
+
 ```{r}
 
 utility_plot <- utilities %>%
@@ -2552,6 +2555,7 @@ utility_plot <- utilities %>%
 ```
 
 ## utility plotly
+
 ```{r}
 utility_plotly <- 
 ggplotly(utility_plot, tooltip = "text") %>%
@@ -2589,4 +2593,3 @@ ggplotly(utility_plot, tooltip = "text") %>%
 
 htmlwidgets::saveWidget(as_widget(utility_plotly), ".\\docs\\utility_costs.html", selfcontained = T)
 ```
-

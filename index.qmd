@@ -461,7 +461,7 @@ ggplotly(total_units_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Total housing units by county, 2012-2024",
+      text = "Total housing units by county, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -536,7 +536,7 @@ ggplotly(total_population_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Northeastern Illinois population counts, 2012-2024",
+      text = "Northeastern Illinois population counts, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -989,7 +989,7 @@ ggplotly(total_population_bar, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Population counts<br>in northeastern Illinois, 2014-2024",
+      text = "Population counts<br>in northeastern Illinois, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1065,7 +1065,7 @@ ggplotly(total_units, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing units in<br>northeastern Illinois, 2014-2024",
+      text = "Housing units in<br>northeastern Illinois, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1150,7 +1150,7 @@ ggplotly(tenure_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>northeastern Illinois, 2014-2024",
+      text = "Housing tenure in<br>northeastern Illinois, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1234,7 +1234,7 @@ ggplotly(tenure_cook, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>Cook County, 2014-2024",
+      text = "Housing tenure in<br>Cook County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1318,7 +1318,7 @@ ggplotly(tenure_DuPage, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>DuPage County, 2014-2024",
+      text = "Housing tenure in<br>DuPage County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1402,7 +1402,7 @@ ggplotly(tenure_Kane, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>Kane County, 2014-2024",
+      text = "Housing tenure in<br>Kane County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1486,7 +1486,7 @@ ggplotly(tenure_Kendall, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>Kendall County, 2014-2024",
+      text = "Housing tenure in<br>Kendall County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1570,7 +1570,7 @@ ggplotly(tenure_Lake, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>Lake County, 2014-2024",
+      text = "Housing tenure in<br>Lake County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1654,7 +1654,7 @@ ggplotly(tenure_McHenry, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>McHenry County, 2014-2024",
+      text = "Housing tenure in<br>McHenry County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1738,7 +1738,7 @@ ggplotly(tenure_Will, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing tenure in<br>Will County, 2014-2024",
+      text = "Housing tenure in<br>Will County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1829,7 +1829,7 @@ ggplotly(type_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>northeastern Illinois, 2015-2024",
+      text = "Housing types in<br>northeastern Illinois, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -1918,7 +1918,7 @@ ggplotly(type_plot_Cook, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Cook County, 2015-2024",
+      text = "Housing types in<br>Cook County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2007,7 +2007,7 @@ ggplotly(type_plot_DuPage, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>DuPage County, 2015-2024",
+      text = "Housing types in<br>DuPage County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2096,7 +2096,7 @@ ggplotly(type_plot_Kane, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Kane County, 2015-2024",
+      text = "Housing types in<br>Kane County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2183,7 +2183,7 @@ ggplotly(type_plot_Kendall, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Kendall County, 2015-2024",
+      text = "Housing types in<br>Kendall County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2270,7 +2270,7 @@ ggplotly(type_plot_Lake, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Lake County, 2015-2024",
+      text = "Housing types in<br>Lake County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2357,7 +2357,7 @@ ggplotly(type_plot_McHenry, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>McHenry County, 2015-2024",
+      text = "Housing types in<br>McHenry County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)
@@ -2445,7 +2445,7 @@ ggplotly(type_plot_Will, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
-      text = "Housing types in<br>Will County, 2015-2024",
+      text = "Housing types in<br>Will County, 2012-2022",
       font = list(family = "Whitney Semibold", 
                   weight = "bold",
                   size = 32)

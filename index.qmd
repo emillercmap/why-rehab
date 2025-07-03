@@ -500,6 +500,96 @@ total_units_plotly
 
 htmlwidgets::saveWidget(as_widget(total_units_plotly), ".\\docs\\total_units.html", selfcontained = T)
 ```
+### housing units and households change
+```{r}
+# Step 1: Prepare data
+hu_hh_data <- county %>%
+  filter(!is.na(GEOG), GEOG != "Region") %>%
+  rename(County = GEOG, Year = year) %>%
+  select(County, Year, HU_TOT, TOT_HH) %>%
+  mutate(
+    hu_hh_ratio = round(HU_TOT / TOT_HH, 3),
+    County = as.character(County)
+  )
+
+# Step 2: Build ggplot (omit geom_point() to prevent duplicate traces)
+hu_hh_plot <- ggplot(hu_hh_data, aes(
+  x = Year,
+  y = hu_hh_ratio,
+  color = County,
+  group = County,
+  text = paste(
+    "County:", County,
+    "<br>Year:", Year,
+    "<br>Ratio of housing units to households:", hu_hh_ratio
+  )
+)) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  scale_x_continuous(breaks = c(2012, 2017, 2022)) +
+  scale_y_continuous(limits = c(0.75, 1.2)) +
+  theme_cmap(xlab = "Year", ylab = "Ratio of housing units to households") +
+  cmap_color_discrete(palette = "main")
+
+```
+
+
+
+#### housing units households ratio
+
+```{r}
+hu_hh_plotly <- ggplotly(hu_hh_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Ratio of housing units to households, 2012–2022",
+      font = list(family = "Whitney Semibold", weight = "bold", size = 32)
+    ),
+    xaxis = list(
+      title = list(font = list(family = "Whitney", size = 20)),
+      tickfont = list(family = "Whitney", size = 20)
+    ),
+    yaxis = list(
+      title = list(font = list(family = "Whitney", size = 20)),
+      tickfont = list(family = "Whitney", size = 20)
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")
+      )
+    ),
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),
+      bgcolor = "rgba(255, 255, 255, 0.7)",
+      bordercolor = "black"
+    ),
+    margin = list(t = 100)
+  )
+
+# Step 4: Fix legend labels if needed
+# Only keep traces that should be in the legend (typically lines, not markers)
+hu_hh_plotly$x$data <- Filter(function(tr) {
+  !is.null(tr$mode) && grepl("lines", tr$mode)
+}, hu_hh_plotly$x$data)
+
+# Set clean legend names
+county_names <- unique(hu_hh_data$County)
+for (i in seq_along(hu_hh_plotly$x$data)) {
+  hu_hh_plotly$x$data[[i]]$name <- county_names[i]
+  hu_hh_plotly$x$data[[i]]$showlegend <- TRUE
+  hu_hh_plotly$x$data[[i]]$legendgroup <- county_names[i]
+  hu_hh_plotly$x$data[[i]]$hoverinfo <- "text"
+}
+
+# View the result
+hu_hh_plotly
+
+
+htmlwidgets::saveWidget(as_widget(hu_hh_plotly), ".\\docs\\housingunits_households.html", selfcontained = T)
+```
+
 
 ## Total population
 
@@ -1297,6 +1387,9 @@ delta_hu_hh_plotly <- ggplotly(delta_hu_hh_plot, tooltip = "text") %>%
 
 htmlwidgets::saveWidget(as_widget(delta_hu_hh_plotly), ".\\docs\\housing_units_bar.html", selfcontained = T)
 ```
+
+
+
 
 ## Occupied / vacancies
 

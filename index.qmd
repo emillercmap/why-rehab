@@ -1194,19 +1194,109 @@ ggplotly(total_units, tooltip = "text") %>%
   
 
 
-htmlwidgets::saveWidget(as_widget(units_plotly), ".\\docs\\housing_units_bar.html", selfcontained = T)
+htmlwidgets::saveWidget(as_widget(units_plotly), ".\\docs\\housing_units_bar_old.html", selfcontained = T)
 ```
-### delta housing units
+### delta housing units and households
 ```{r}
-
+delta_hu_hh <- county %>%
+  filter(GEOG != "Region") %>%
+  rename(
+    County = GEOG,
+    Year = year
+  ) %>%
+  select(County, Year, HU_TOT, TOT_HH) %>%
+  pivot_wider(
+    names_from = Year,
+    values_from = c(HU_TOT, TOT_HH)
+  ) %>%
+  mutate(
+    `Change in housing units, 2012-2017` = `HU_TOT_2017` - `HU_TOT_2012`,
+    `Change in housing units, 2017-2022` = `HU_TOT_2022` - `HU_TOT_2017`,
+    `Change in households, 2012-2017` = `TOT_HH_2017` - `TOT_HH_2012`,
+    `Change in households, 2017-2022` = `TOT_HH_2022` - `TOT_HH_2017`
+  ) %>%
+  select(County, `Change in housing units, 2012-2017`:`Change in households, 2017-2022`) %>%
+  pivot_longer(
+    cols = c(`Change in housing units, 2012-2017`:`Change in households, 2017-2022`),
+    names_to = "Period",
+    values_to = "Change"
+  ) %>%
+  mutate(
+    Type = case_when(
+      str_detect(Period, "households") ~ "Households",
+      str_detect(Period, "housing units") ~ "Housing units",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  mutate(PeriodLabel = case_when(
+    str_detect(Period, "2012.*2017") ~ "2012–2017",
+    str_detect(Period, "2017.*2022") ~ "2017–2022",
+    TRUE ~ NA_character_
+  ))
 ```
 
+
+#### delta housing units plot
+```{r}
+delta_hu_hh_plot <- ggplot(delta_hu_hh, aes(
+  x = PeriodLabel,
+  y = Change,
+  fill = County,
+  text = paste("County:", County, "<br>", Period, "<br>Change:", scales::comma(Change))
+)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~ Type, ncol = 2, scales = "free_x") +  # ⬅️ key addition
+  scale_y_continuous(labels = scales::comma) +
+  theme_cmap(ylab = "Change") +
+  cmap_fill_discrete(palette = "main")
+
+
+```
 
 #### delta housing units plotly
 ```{r}
+# Convert to interactive
+delta_hu_hh_plotly <- ggplotly(delta_hu_hh_plot, tooltip = "text") %>%
+  layout(
+    font = list(family = "Whitney Semibold", size = 12),
+    title = list(
+      text = "Change in households and housing units<br>in northeastern Illinois, 2012–2022",
+      font = list(family = "Whitney Semibold", weight = "bold", size = 32)
+    ),
+    xaxis = list(  # Applies to first panel
+      title = list(font = list(family = "Whitney", size = 20)),
+      tickfont = list(family = "Whitney", size = 20)
+    ),
+    xaxis2 = list(  # Applies to second panel (e.g., Housing Units)
+      title = list(font = list(family = "Whitney", size = 20)),
+      tickfont = list(family = "Whitney", size = 20)
+    ),
+    yaxis = list(
+      title = list(font = list(family = "Whitney", size = 20)),
+      tickfont = list(family = "Whitney", size = 20),
+      tickformat = ",.0f"
+    ),
+    legend = list(
+      font = list(family = "Whitney", size = 18),
+      title = list(
+        text = "County",
+        font = list(family = "Whitney Semibold", size = 24, weight = "bold")
+      )
+    ),
+    hoverlabel = list(
+      font = list(family = "Whitney", size = 12),
+      bgcolor = "rgba(255, 255, 255, 0.7)",
+      bordercolor = "black"
+    ),
+    margin = list(t = 100)
+  )
 
+
+  
+
+
+htmlwidgets::saveWidget(as_widget(delta_hu_hh_plotly), ".\\docs\\housing_units_bar.html", selfcontained = T)
 ```
-
 
 ## Occupied / vacancies
 

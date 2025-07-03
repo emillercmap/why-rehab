@@ -1313,8 +1313,8 @@ delta_hu_hh <- county %>%
   ) %>%
   mutate(
     Type = case_when(
-      str_detect(Period, "households") ~ "Households",
-      str_detect(Period, "housing units") ~ "Housing units",
+      str_detect(Period, "households") ~ "Change in households",
+      str_detect(Period, "housing units") ~ "Change in housing units",
       TRUE ~ NA_character_
     )
   ) %>%
@@ -1351,7 +1351,7 @@ delta_hu_hh_plotly <- ggplotly(delta_hu_hh_plot, tooltip = "text") %>%
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
       text = "Change in households and housing units<br>in northeastern Illinois, 2012–2022",
-      font = list(family = "Whitney Semibold", weight = "bold", size = 32)
+      font = list(family = "Whitney Semibold", weight = "bold", size = 28)
     ),
     xaxis = list(  # Applies to first panel
       title = list(font = list(family = "Whitney", size = 20)),
@@ -1378,7 +1378,7 @@ delta_hu_hh_plotly <- ggplotly(delta_hu_hh_plot, tooltip = "text") %>%
       bgcolor = "rgba(255, 255, 255, 0.7)",
       bordercolor = "black"
     ),
-    margin = list(t = 100)
+    margin = list(t = 150)
   )
 
 

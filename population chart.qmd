@@ -1,0 +1,32 @@
+---
+title: "population chart"
+---
+
+# libraries
+
+```{r}
+library(devtools)
+library(tidyverse, tidycensus)
+library(ggplot2)
+library(plotly)
+library(pak)
+library(cmapplot)
+library(cmapgeo)
+library(scales)
+
+```
+
+### pull acs data
+
+```{r}
+age_data <- get_acs(
+  geography = "county",
+  state = "IL",
+  table = "B01001",
+  year = 2022,
+  survey = "acs5",
+  county = c("Cook", "DuPage", "Kane", "Kendall", "Lake", "McHenry", "Will"),
+  output = "long"
+)
+
+```

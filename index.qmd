@@ -1,5 +1,3 @@
-------------------------------------------------------------------------
-
 ---
 title: "why rehab"
 toc: false
@@ -1029,12 +1027,12 @@ ggplotly(total_population_bar, tooltip = "text") %>%
   
 
 
-htmlwidgets::saveWidget(as_widget(total_population_bar_plotly), ".\\docs\\population_bar.html", selfcontained = T)
+htmlwidgets::saveWidget(as_widget(total_population_bar_plotly), ".\\docs\\population_bar_old.html", selfcontained = T)
 ```
 ### delta population
 
 ```{r}
-# Create the tibblet
+# Create the tibble
 total_population_delta <- county %>%
   filter(GEOG != "Region") %>%
   rename(
@@ -1083,7 +1081,7 @@ delta_population_plot <- ggplot(total_population_delta, aes(
 #### delta population plotly
 ```{r}
 # Convert to interactive
-ggplotly(delta_population_plot, tooltip = "text") %>%
+delta_population_plotly <- ggplotly(delta_population_plot, tooltip = "text") %>%
   layout(
     font = list(family = "Whitney Semibold", size = 12),
     title = list(
@@ -1117,7 +1115,7 @@ ggplotly(delta_population_plot, tooltip = "text") %>%
   
 
 
-htmlwidgets::saveWidget(as_widget(total_population_bar_delta), ".\\docs\\population_bar.html", selfcontained = T)
+htmlwidgets::saveWidget(as_widget(delta_population_plotly), ".\\docs\\population_bar.html", selfcontained = T)
 ```
 
 

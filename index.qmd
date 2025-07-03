@@ -1094,7 +1094,8 @@ delta_population_plotly <- ggplotly(delta_population_plot, tooltip = "text") %>%
     ),
     yaxis = list(
       title = list(font = list(family = "Whitney", size = 20)),
-      tickfont = list(family = "Whitney", size = 20)
+      tickfont = list(family = "Whitney", size = 20),
+      tickformat = ",d"
     ),
     legend = list(
       font = list(family = "Whitney", size = 18),
